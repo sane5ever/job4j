@@ -25,3 +25,7 @@ hs_err_pid*
 
 # maven output of the build directory
 target/
+
+# idea files
+.idea
+*.iml
