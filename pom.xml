@@ -20,7 +20,7 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.maven.plugins</groupId>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.0.0</version>
 			</plugin>
