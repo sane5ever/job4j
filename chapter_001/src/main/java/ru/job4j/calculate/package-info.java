@@ -1,5 +1,5 @@
 /**
- *Package for calculate task9
+ *Package for calculate tasks.
  *
  *@author Alexander Savchenko (sane5ever@gmail.com)
  *@version 1.0

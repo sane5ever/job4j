@@ -1,5 +1,5 @@
 /**
- *Package for converter
+ *Package for converter tasks.
  *
  *@author Alexander Savchenko (sane5ever@gmail.com)
  *@version 1.0

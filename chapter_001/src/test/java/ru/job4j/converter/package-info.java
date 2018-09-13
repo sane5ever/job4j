@@ -1,5 +1,5 @@
 /**
- *Package for testing of converter task.
+ *Package for testing of converter tasks.
  *
  *@author Alexander Savchenko (sane5ever@gmail.com)
  *@version 1.0
