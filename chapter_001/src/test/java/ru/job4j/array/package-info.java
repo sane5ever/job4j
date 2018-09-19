@@ -1,5 +1,5 @@
 /**
- *Package for testing of loop tasks.
+ *Package for testing of array tasks.
  *
  *@author Alexander Savchenko (sane5ever@gmail.com)
  *@version 1.0
