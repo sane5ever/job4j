@@ -1,7 +1,5 @@
 package ru.job4j.array;
 
-import java.util.function.Predicate;
-
 /**
  * 6.7. Квадратный массив заполнен true или false по диагоналям.
  *
