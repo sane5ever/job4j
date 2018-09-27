@@ -8,12 +8,10 @@ package ru.job4j.calculator;
  */
 
 public class Calculator {
-    /**
-     * Поле для хранения результата вычислений методов калькулятора.
-     */
+    /** Поле для хранения результата вычислений методов калькулятора. */
     private double result;
+
     /**
-     * Геттер для поля result.
      * @return result;
      */
     public double getResult() {
@@ -21,32 +19,32 @@ public class Calculator {
     }
     /**
      * Сложение двух чисел.
-     * @param first — первое слагаемое;
-     * @param second — второе слагаемое;
+     * @param first слагаемое
+     * @param second слагаемое
      */
     public void add(double first, double second) {
         this.result = first + second;
     }
     /**
      * Вычитание двух чисел.
-     * @param first — вычитаемое;
-     * @param second — вычитатель;
+     * @param first вычитаемое
+     * @param second вычитатель
      */
     public void subtract(double first, double second) {
         this.result = first - second;
     }
     /**
      * Деление двух чисел.
-     * @param first — делимое;
-     * @param second — делитель;
+     * @param first делимое
+     * @param second делитель
      */
     public void div(double first, double second) {
         this.result = first / second;
     }
     /**
      * Умножение двух чисел.
-     * @param first — первый множетель;
-     * @param second — второй множетель;
+     * @param first множетель
+     * @param second множетель
      */
     public void multiple(double first, double second) {
         this.result = first * second;

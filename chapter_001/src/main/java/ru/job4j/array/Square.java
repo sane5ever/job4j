@@ -9,14 +9,13 @@ package ru.job4j.array;
  */
 public class Square {
     /**
-     *
      * @param bound длина массива
      * @return массив, заполненный элементами от 1 до bound, возведёнными в квадрат
      */
     public int[] calculate(int bound) {
         int[] result = new int[bound];
-        for (int i = 1; i <= bound; i++) {
-            result[i - 1] = i * i;
+        for (int index = 1; index != bound; index++) {
+            result[index - 1] = index * index;
         }
         return result;
     }

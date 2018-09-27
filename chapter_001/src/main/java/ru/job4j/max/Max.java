@@ -8,16 +8,15 @@ package ru.job4j.max;
  */
 public class Max {
     /**
-     * @param first — первое число;
-     * @param second — второе число;
-     * @return возвращает большее из заданных чисел;
+     * @param first первое число
+     * @param second второе число
+     * @return возвращает большее из заданных чисел
      */
     public int max(int first, int second) {
         return first > second ? first : second;
     }
 
     /**
-     *
      * @param first первое число
      * @param second второе число
      * @param third третье число

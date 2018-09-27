@@ -9,7 +9,6 @@ package ru.job4j.array;
  */
 public class MatrixCheck {
     /**
-     *
      * @param data матрица с boolean-значениями
      * @return true, если каждая диагональ заполнена одинаковыми элементами
      */

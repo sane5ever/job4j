@@ -8,19 +8,14 @@ package ru.job4j.condition;
  */
 
 public class Point {
-    /**
-     * Коодината х данной точки
-     */
+    /** x-координата */
     private int x;
-    /**
-     * Координата y данной точки
-     */
+    /** y-координата */
     private int y;
 
     /**
-     * Конструктор
-     * @param x — х-координата
-     * @param y — y-координата
+     * @param x х-координата
+     * @param y y-координата
      */
     public Point(int x, int y) {
         this.x = x;
@@ -28,9 +23,9 @@ public class Point {
     }
 
     /**
-     * Метод, вычисляющий растсояние до заданной точки.
-     * @param that — входящая точка, расстояние до кот. надо вычислить;
-     * @return — вычисленное расстояние;
+     * Вычисляет расстояние до заданной точки.
+     * @param that точка, расстояние до кот. надо вычислить
+     * @return вычисленное расстояние
      */
     public double distanceTo(Point that) {
         return Math.sqrt(

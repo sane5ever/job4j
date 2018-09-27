@@ -8,6 +8,11 @@ package ru.job4j.array;
  * @since 2018-09-19
  */
 public class Matrix {
+    /**
+     * формирует и возвращает значения перемножений чисел от 1 до size в виде числовой матрицы
+     * @param size размер выходной матрицы
+     * @return таблица умножения
+     */
     public int[][] multiple(int size) {
         int[][] table = new int[size][size];
         for (int row = 0; row < size; row++) {

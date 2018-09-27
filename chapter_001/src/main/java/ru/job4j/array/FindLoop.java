@@ -9,14 +9,13 @@ package ru.job4j.array;
  */
 public class FindLoop {
     /**
-     *
      * @param data данный массив
      * @param el искомое в массиве значение
      * @return индекс искомого элемента массива, либо -1 при его отсутствии
      */
     public int indexOf(int[] data, int el) {
         int result = -1;
-        for (int index = 0; index < data.length; index++) {
+        for (int index = 0; index != data.length; index++) {
             if (data[index] == el) {
                 result = index;
                 break;

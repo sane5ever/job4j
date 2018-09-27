@@ -12,10 +12,9 @@ public class Triangle {
     private Point c;
 
     /**
-     *
-     * @param a первая вершина треугольника
-     * @param b вторая вершина треугольника
-     * @param c третья вершина треугольника
+     * @param a вершина треугольника
+     * @param b вершина треугольника
+     * @param c вершина треугольника
      */
     public Triangle(Point a, Point b, Point c) {
         this.a = a;

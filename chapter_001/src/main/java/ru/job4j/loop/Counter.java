@@ -8,16 +8,15 @@ package ru.job4j.loop;
  */
 public class Counter {
     /**
-     *
      * @param start начало диапазона
      * @param finish конец диапазона
      * @return сумма чётных чисел в заданном диапазоне (включительно)
      */
     public int add(int start, int finish) {
         int result = 0;
-        for (int i = start; i <= finish; i++) {
-            if (i % 2 == 0) {
-                result += i;
+        for (int index = start; index <= finish; index++) {
+            if (index % 2 == 0) {
+                result += index;
             }
         }
         return result;

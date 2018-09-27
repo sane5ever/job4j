@@ -9,16 +9,16 @@ package ru.job4j.condition;
 public class DummyBot {
     /**
      * Отвечает на вопросы.
-     * @param question — вопрос от клиента;
-     * @return — ответ;
+     * @param question вопрос от клиента
+     * @return ответ
      */
     public String answer(String question) {
-        String rs1 = "Это ставит меня в тупик. Спросите другой вопрос.";
+        String result = "Это ставит меня в тупик. Спросите другой вопрос.";
         if ("Привет, Бот.".equals(question)) {
-            rs1 = "Привет, умник.";
+            result = "Привет, умник.";
         } else if ("Пока.".equals(question)) {
-            rs1 = "До скорой встречи.";
+            result = "До скорой встречи.";
         }
-        return rs1;
+        return result;
     }
 }

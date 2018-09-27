@@ -5,7 +5,6 @@ package ru.job4j.array;
  */
 public class MergeArrays {
     /**
-     *
      * @param first первый отсортированный массив
      * @param second второй отсортированный массив
      * @return отсортированный массив, полученный слиянием входящих

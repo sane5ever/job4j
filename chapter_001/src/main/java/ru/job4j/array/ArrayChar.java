@@ -1,14 +1,13 @@
 package ru.job4j.array;
 
 /**
- * Обертка над строкой.
+ * 6.4. Слово начинается с ...
  *
  * @author Alexander Savchenko (sane5ever@gmail.com)
  * @version 1.0
  * @since 2018-09-19
  */
 public class ArrayChar {
-
     private char[] data;
 
     /**
@@ -26,9 +25,9 @@ public class ArrayChar {
      */
     public boolean startWith(String prefix) {
         boolean result = true;
-        char[] value = prefix.toCharArray();
-        for (int index = 0; index < value.length; index++) {
-            if (value[index] != this.data[index]) {
+        char[] symbols = prefix.toCharArray();
+        for (int index = 0; index < symbols.length; index++) {
+            if (symbols[index] != this.data[index]) {
                 result = false;
                 break;
             }

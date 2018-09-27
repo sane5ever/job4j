@@ -53,6 +53,9 @@ public class Logic3T {
                     break;
                 }
             }
+            if (result) {
+                break;
+            }
         }
         return result;
     }
@@ -65,8 +68,8 @@ public class Logic3T {
     private boolean checkAllLines(Predicate<Figure3T> predicate) {
         boolean result = false;
         for (int index = 0; index != this.size; index++) {
-            if (checkTheLine(index, 0, 0, 1, predicate)
-                    || checkTheLine(0, index, 1, 0, predicate)) {
+            if (this.checkTheLine(index, 0, 0, 1, predicate)
+                    || this.checkTheLine(0, index, 1, 0, predicate)) {
                 result = true;
                 break;
             }
@@ -88,7 +91,7 @@ public class Logic3T {
     private boolean checkTheLine(int x, int y, int dx, int dy, Predicate<Figure3T> predicate) {
         boolean result = true;
         for (int index = 0; index != this.size; index++) {
-            Figure3T current = table[x][y];
+            Figure3T current = this.table[x][y];
             if (!predicate.test(current)) {
                 result = false;
                 break;

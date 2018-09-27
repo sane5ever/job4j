@@ -8,14 +8,13 @@ package ru.job4j.loop;
  */
 public class Factorial {
     /**
-     *
      * @param n положительное целое число
      * @return n-факториал
      */
     public int calc(int n) {
         int result = 1;
-        for (int i = 2; i <= n; i++) {
-            result *= i;
+        for (int index = 2; index <= n; index++) {
+            result *= index;
         }
         return result;
     }

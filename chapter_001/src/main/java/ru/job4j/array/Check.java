@@ -9,7 +9,6 @@ package ru.job4j.array;
  */
 public class Check {
     /**
-     *
      * @param data входящие массив c boolean-значениями
      * @return true, если все эл-ты массива идентичны, иначе false
      */

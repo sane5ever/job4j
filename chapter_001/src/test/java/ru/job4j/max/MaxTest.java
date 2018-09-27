@@ -12,7 +12,6 @@ import static org.junit.Assert.assertThat;
  * @since 13.09.2018
  */
 public class MaxTest {
-
     @Test
     public void whenFirstLessSecond() {
         Max maximum = new Max();
