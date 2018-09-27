@@ -48,4 +48,24 @@ public class MergeArraysTest {
         int[] expected = {-5, -4, -2, -1, 0, 1, 2, 3};
         assertThat(result, is(expected));
     }
+
+    @Test
+    public void whenTheFirstArrayIsEmptyThenOutputIsEqualToTheSecondOne() {
+        MergeArrays merger = new MergeArrays();
+        int[] first = {};
+        int[] second = {1, 2, 3, 5};
+        int[] result = merger.merge(first, second);
+        int[] expected = {1, 2, 3, 5};
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenTheSecondArrayIsEmptyThenOutputIsEqualToTheFirstOne() {
+        MergeArrays merger = new MergeArrays();
+        int[] first = {5, 3, 2, 1, 0};
+        int[] second = {};
+        int[] result = merger.merge(first, second);
+        int[] expected = {5, 3, 2, 1, 0};
+        assertThat(result, is(expected));
+    }
 }

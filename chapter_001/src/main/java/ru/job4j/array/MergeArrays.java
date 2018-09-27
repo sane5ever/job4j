@@ -18,14 +18,11 @@ public class MergeArrays {
                 thirdIndex++
         ) {
             if (firstIndex == first.length) {
-                result[thirdIndex] = second[secondIndex];
-                secondIndex++;
+                result[thirdIndex] = second[secondIndex++];
             } else if (secondIndex == second.length || first[firstIndex] < second[secondIndex]) {
-                result[thirdIndex] = first[firstIndex];
-                firstIndex++;
+                result[thirdIndex] = first[firstIndex++];
             } else {
-                result[thirdIndex] = second[secondIndex];
-                secondIndex++;
+                result[thirdIndex] = second[secondIndex++];
             }
         }
         return result;
