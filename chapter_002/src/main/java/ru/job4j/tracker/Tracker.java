@@ -27,6 +27,7 @@ public class Tracker {
      */
     public Item add(Item item) {
         item.setId(this.generateId());
+        item.setCreate(System.currentTimeMillis());
         this.items[this.position++] = item;
         return item;
     }
@@ -47,6 +48,7 @@ public class Tracker {
     public void replace(String id, Item item) {
         int index = this.findPositionById(id);
         if (index != -1) {
+            item.setCreate(this.items[index].getCreate());
             this.items[index] = item;
         }
     }
