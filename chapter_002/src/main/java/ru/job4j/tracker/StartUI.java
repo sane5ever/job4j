@@ -1,6 +1,5 @@
 package ru.job4j.tracker;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -14,19 +13,19 @@ public class StartUI {
     /** константа меню для добавления новой заявки */
     private static final String ADD = "0";
 
-    /** константа меню для добавления новой заявки */
+    /** константа меню для вывода на экран всех заявок */
     private static final String SHOW = "1";
 
-    /** константа меню для добавления новой заявки */
+    /** константа меню для редактирования заявки */
     private static final String EDIT = "2";
 
-    /** константа меню для добавления новой заявки */
+    /** константа меню для удаления заявки */
     private static final String DELETE = "3";
 
-    /** константа меню для добавления новой заявки */
+    /** константа меню для поиска заявки по id */
     private static final String FIND_BY_ID = "4";
 
-    /** константа меню для добавления новой заявки */
+    /** константа меню для поиска заявок по имени */
     private static final String FIND_BY_NAME = "5";
 
     /** константа меню выхода из цикла */
