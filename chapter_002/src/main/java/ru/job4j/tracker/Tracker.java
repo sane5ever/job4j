@@ -45,23 +45,30 @@ public class Tracker {
      * @param id уникальный ключ заменяемой заявки
      * @param item заменяющая заявка
      */
-    public void replace(String id, Item item) {
+    public boolean replace(String id, Item item) {
+        boolean result = false;
         int index = this.findPositionById(id);
         if (index != -1) {
+            result = true;
+            item.setId(id);
             item.setCreate(this.items[index].getCreate());
             this.items[index] = item;
         }
+        return result;
     }
 
     /**
      * реализует удаление заявки
      * @param id уникальный ключ удаляемой заявки
      */
-    public void delete(String id) {
+    public boolean delete(String id) {
+        boolean result = false;
         int index = this.findPositionById(id);
         if (index != -1) {
+            result = true;
             System.arraycopy(this.items, index + 1, this.items, index, --this.position - index);
         }
+        return result;
     }
 
     /**
