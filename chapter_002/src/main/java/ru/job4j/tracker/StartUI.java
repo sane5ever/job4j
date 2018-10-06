@@ -1,6 +1,7 @@
 package ru.job4j.tracker;
 
 import java.util.Date;
+import java.util.StringJoiner;
 
 /**
  * Точка входа в программу. Обеспечивает полноценную работу всего приложения (трекера).
@@ -36,6 +37,18 @@ public class StartUI {
 
     /** хранилище заявок */
     private final Tracker tracker;
+
+    static final String HEADER = new StringJoiner(System.lineSeparator())
+                                            .add("Menu.")
+                                            .add("0. Add new Item")
+                                            .add("1. Show all items")
+                                            .add("2. Edit item")
+                                            .add("3. Delete item")
+                                            .add("4. Find item by Id")
+                                            .add("5. Find items by name")
+                                            .add("6. Exit Program")
+                                            .toString()
+                                            ;
 
     /**
      * Конструктор, инициализирующий финальные поля.
@@ -77,8 +90,7 @@ public class StartUI {
      * Вывод пунктов меню в консоль.
      */
     private void showMenu() {
-        System.out.println(String.format("Меню.%s0. Add new Item%<s1. Show all items%<s2. Edit item%<s3. Delete item%<s4. Find item by Id%<s5. Find items by name%<s6. Exit Program",
-                System.lineSeparator()));
+        System.out.println(HEADER);
     }
 
     /**
