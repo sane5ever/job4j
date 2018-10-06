@@ -1,5 +1,7 @@
 package ru.job4j.pseudo;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -14,13 +16,27 @@ import static org.junit.Assert.assertThat;
  * Тестируем отрисовку фигур.
  */
 public class PaintTest {
+    /** default-вывод в консоль */
+    private final PrintStream stdout = System.out;
+    /** буфер для результата */
+    private final OutputStream buffer = new ByteArrayOutputStream();
+    /** поток вывода для перехвата консоли в буфер */
+    private PrintStream out;
+
+    @Before
+    public void loadOutput() {
+        this.out = new PrintStream(this.buffer);
+        System.setOut(out);
+    }
+
+    @After
+    public void backOutput() {
+        System.setOut(this.stdout);
+        out.close();
+    }
 
     @Test
     public void whenDrawSizeIsFourAndFigureIsSquare() {
-        PrintStream stdout = System.out;
-        OutputStream buffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(buffer);
-        System.setOut(out);
         new Paint().draw(new Square(4));
         assertThat(
                 buffer.toString(),
@@ -33,16 +49,10 @@ public class PaintTest {
                         .toString()
                 )
         );
-        System.setOut(stdout);
-        out.close();
     }
 
     @Test
     public void whenDrawSizeIfThreeAndFigureIsTriangle() {
-        PrintStream stdout = System.out;
-        OutputStream buffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(buffer);
-        System.setOut(out);
         new Paint().draw(new Triangle(3));
         assertThat(
                 buffer.toString(),
@@ -54,7 +64,5 @@ public class PaintTest {
                         .toString()
                 )
         );
-        System.setOut(stdout);
-        out.close();
     }
 }
