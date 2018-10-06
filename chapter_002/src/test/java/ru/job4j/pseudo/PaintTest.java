@@ -26,20 +26,20 @@ public class PaintTest {
     @Before
     public void loadOutput() {
         this.out = new PrintStream(this.buffer);
-        System.setOut(out);
+        System.setOut(this.out);
     }
 
     @After
     public void backOutput() {
         System.setOut(this.stdout);
-        out.close();
+        this.out.close();
     }
 
     @Test
     public void whenDrawSizeIsFourAndFigureIsSquare() {
         new Paint().draw(new Square(4));
         assertThat(
-                buffer.toString(),
+                this.buffer.toString(),
                 is(
                         new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
                         .add("++++")
@@ -55,7 +55,7 @@ public class PaintTest {
     public void whenDrawSizeIfThreeAndFigureIsTriangle() {
         new Paint().draw(new Triangle(3));
         assertThat(
-                buffer.toString(),
+                this.buffer.toString(),
                 is(
                         new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
                         .add("+")
