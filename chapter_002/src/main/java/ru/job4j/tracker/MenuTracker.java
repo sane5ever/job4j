@@ -1,7 +1,6 @@
 package ru.job4j.tracker;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +19,22 @@ public class MenuTracker {
         this.tracker = tracker;
     }
 
+    /**
+     * Формируем массив с ключами пунктов меню для проверки пользовательского ввода.
+     * @return массив с ключами
+     */
+    public int[] getRange() {
+        int[] result = new int[this.actions.size()];
+        int count = 0;
+        for (UserAction action : actions) {
+            result[count++] = action.key();
+        }
+        return result;
+    }
+
+    /**
+     * Заполняем массив меню возможными операциями.
+     */
     public void fillActions() {
         this.actions.add(new AddItem(0, "Add new Item"));
         this.actions.add(this.new ShowItem(1, "Show all items"));
@@ -30,10 +45,17 @@ public class MenuTracker {
         this.actions.add(new ExitProgram(6, "Exit Program"));
     }
 
+    /**
+     * Запускаем исполнение выбранного пользовательского действия.
+     * @param key ключ пункта меню
+     */
     public void select(int key) {
         this.actions.get(key).execute(this.input, this.tracker);
     }
 
+    /**
+     * Выводим в консоль доступные пункты меню.
+     */
     public void show() {
         System.out.println("Menu.");
         for (UserAction action : this.actions) {
@@ -43,6 +65,10 @@ public class MenuTracker {
         }
     }
 
+    /**
+     * Юзер-экшн
+     * Показать всех заметки.
+     */
     public class ShowItem implements UserAction {
 
         private final int key;
@@ -71,6 +97,9 @@ public class MenuTracker {
         }
     }
 
+    /**
+     * Поиск заметки по уникальному номеру.
+     */
     public class FindItemById implements UserAction {
 
         private final int key;
@@ -103,6 +132,10 @@ public class MenuTracker {
         }
     }
 
+    /**
+     * Юзер-экшн.
+     * Поиск заметок по имени.
+     */
     public class FindItemsByName implements UserAction {
 
         private final int key;
@@ -132,6 +165,10 @@ public class MenuTracker {
         }
     }
 
+    /**
+     * Юзер-экшн.
+     * Редактировать заметку (по ID).
+     */
     public static class EditItem implements UserAction {
         private final int key;
         private final String name;
@@ -162,6 +199,10 @@ public class MenuTracker {
         }
     }
 
+    /**
+     * Юзер-экшн.
+     * Удалить заметку (по ID).
+     */
     public static class DeleteItem implements UserAction {
         private final int key;
         private final String name;
@@ -189,13 +230,21 @@ public class MenuTracker {
         }
     }
 
+    /**
+     * Осуществляем вывод заметок в консоль.
+     * @param items заметки
+     */
     private void outputItems(Item... items) {
         for (Item item : items) {
-            System.out.println(String.format("%s|%s|%s|%td-%<tm-%<ty", item.getId(), item.getName(), item.getDescription(), new Date(item.getCreate())));
+            System.out.println(item.toString());
         }
     }
 }
 
+/**
+ * Юзер-экшн.
+ * Добавление заметки.
+ */
 class AddItem implements UserAction {
     private final int key;
     private final String name;
@@ -226,7 +275,10 @@ class AddItem implements UserAction {
 }
 
 
-
+/**
+ * Юзер-экшн.
+ * Выход из программы.
+ */
 class ExitProgram implements UserAction {
     private final int key;
     private final String name;

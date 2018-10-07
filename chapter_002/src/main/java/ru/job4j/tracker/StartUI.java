@@ -1,5 +1,8 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Точка входа в программу. Обеспечивает полноценную работу всего приложения (трекера).
  *
@@ -30,9 +33,10 @@ public class StartUI {
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         menu.fillActions();
+        int[] range = menu.getRange();
         do {
             menu.show();
-            menu.select(Integer.valueOf(this.input.ask("select:")));
+            menu.select(this.input.ask("select:", range));
         } while (this.tracker.isReady());
     }
     /**
@@ -40,7 +44,6 @@ public class StartUI {
      * @param args args
      */
     public static void main(String[] args) {
-        new StartUI(new ConsoleInput(), new Tracker()).init();
-
+        new StartUI(new ValidateInput(), new Tracker()).init();
     }
 }

@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.Date;
+
 /**
  * Заявка.
  */
@@ -45,5 +47,16 @@ public class Item {
 
     public void setCreate(long create) {
         this.create = create;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s|%s|%s|%td-%<tm-%<ty",
+                this.getId(),
+                this.getName(),
+                this.getDescription(),
+                new Date(this.getCreate())
+        );
     }
 }
