@@ -20,6 +20,17 @@ public class Tracker {
     /** для генерации уникального номера */
     private static final Random RN = new Random();
 
+    /** обеспечивает рабочий цикл приложения */
+    private boolean ready = true;
+
+    public boolean isReady() {
+        return this.ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
     /**
      * реализует добавление заявок
      * @param item новая заявка

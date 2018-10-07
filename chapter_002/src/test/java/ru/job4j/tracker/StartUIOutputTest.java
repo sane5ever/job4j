@@ -23,6 +23,17 @@ public class StartUIOutputTest {
     private final Tracker tracker = new Tracker();
     private Input input;
 
+    private static final String HEADER = new StringJoiner(System.lineSeparator())
+            .add("Menu.")
+            .add("0. Add new Item.")
+            .add("1. Show all items.")
+            .add("2. Edit item.")
+            .add("3. Delete item.")
+            .add("4. Find item by Id.")
+            .add("5. Find items by name.")
+            .add("6. Exit Program.")
+            .toString();
+
     @Before
     public void prepare() {
         this.out = new PrintStream(this.buffer);
@@ -38,19 +49,20 @@ public class StartUIOutputTest {
 
     @Test
     public void whenTryToShowAll() {
-        input = new StubInput(new String[] {"1", "6"});
+        input = new StubInput(new String[] {"1", "6", "y"});
         new StartUI(this.input, this.tracker).init();
+
         assertThat(
                 this.buffer.toString(),
                 is(
                         new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
-                        .add(StartUI.HEADER)
+                        .add(HEADER)
                         .add("------------ Вывод имеющихся заявок ---------------")
                         .add("11111111|first|test|01-01-70")
                         .add("22222222|second|test|01-01-70")
                         .add("33333333|third|test|01-01-70")
                         .add("---------------------------------------------------")
-                        .add(StartUI.HEADER)
+                        .add(HEADER)
                         .toString()
                 )
         );
@@ -58,17 +70,17 @@ public class StartUIOutputTest {
 
     @Test
     public void whenTryToFindById() {
-        input = new StubInput(new String[] {"4", "22222222", "6"});
+        input = new StubInput(new String[] {"4", "22222222", "6", "y"});
         new StartUI(this.input, this.tracker).init();
         assertThat(
                 this.buffer.toString(),
                 is(
                         new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
-                        .add(StartUI.HEADER)
+                        .add(HEADER)
                         .add("--------------- Поиск заявки по ID ----------------")
                         .add("22222222|second|test|01-01-70")
                         .add("---------------------------------------------------")
-                        .add(StartUI.HEADER)
+                        .add(HEADER)
                         .toString()
                 )
         );
@@ -76,17 +88,17 @@ public class StartUIOutputTest {
 
     @Test
     public void whenTryToFindByName() {
-        input = new StubInput(new String[] {"5", "first", "6"});
+        input = new StubInput(new String[] {"5", "first", "6", "y"});
         new StartUI(this.input, this.tracker).init();
         assertThat(
                 this.buffer.toString(),
                 is(
                         new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
-                        .add(StartUI.HEADER)
+                        .add(HEADER)
                         .add("--------------- Поиск заявок по имени --------------")
                         .add("11111111|first|test|01-01-70")
                         .add("---------------------------------------------------")
-                        .add(StartUI.HEADER)
+                        .add(HEADER)
                         .toString()
                 )
         );
