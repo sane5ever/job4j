@@ -1,7 +1,5 @@
 package ru.job4j.tracker;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Точка входа в программу. Обеспечивает полноценную работу всего приложения (трекера).
@@ -17,6 +15,8 @@ public class StartUI {
     /** хранилище заявок */
     private final Tracker tracker;
 
+    private boolean ready = true;
+
     /**
      * Конструктор, инициализирующий финальные поля.
      * @param input ввод данных от пользователя
@@ -27,23 +27,27 @@ public class StartUI {
         this.tracker = tracker;
     }
 
+    public void finish() {
+        this.ready = false;
+    }
+
     /**
      * Обеспечивает сновной цикл программы.
      */
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
-        menu.fillActions();
+        menu.fillActions(this);
         int[] range = menu.getRange();
         do {
             menu.show();
             menu.select(this.input.ask("select:", range));
-        } while (this.tracker.isReady());
+        } while (this.ready);
     }
     /**
      * Запуск программы.
      * @param args args
      */
     public static void main(String[] args) {
-        new StartUI(new ValidateInput(), new Tracker()).init();
+        new StartUI(new ValidateInput(new ConsoleInput()), new Tracker()).init();
     }
 }

@@ -35,14 +35,14 @@ public class MenuTracker {
     /**
      * Заполняем массив меню возможными операциями.
      */
-    public void fillActions() {
+    public void fillActions(StartUI ui) {
         this.actions.add(new AddItem(0, "Add new Item"));
         this.actions.add(this.new ShowItem(1, "Show all items"));
         this.actions.add(new MenuTracker.EditItem(2, "Edit item"));
         this.actions.add(new MenuTracker.DeleteItem(3, "Delete item"));
         this.actions.add(this.new FindItemById(4, "Find item by Id"));
         this.actions.add(this.new FindItemsByName(5, "Find items by name"));
-        this.actions.add(new ExitProgram(6, "Exit Program"));
+        this.actions.add(new ExitProgram(6, "Exit Program", ui));
     }
 
     /**
@@ -283,9 +283,12 @@ class ExitProgram implements UserAction {
     private final int key;
     private final String name;
 
-    public ExitProgram(int key, String name) {
+    private final StartUI ui;
+
+    public ExitProgram(int key, String name, StartUI ui) {
         this.key = key;
         this.name = name;
+        this.ui = ui;
     }
     @Override
     public int key() {
@@ -295,7 +298,7 @@ class ExitProgram implements UserAction {
     @Override
     public void execute(Input input, Tracker tracker) {
         if ("y".equals(input.ask("Exit?(y): "))) {
-            tracker.setReady(false);
+            this.ui.finish();
         }
     }
 
