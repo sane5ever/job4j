@@ -69,19 +69,9 @@ public class MenuTracker {
      * Юзер-экшн
      * Показать всех заметки.
      */
-    public class ShowItem implements UserAction {
-
-        private final int key;
-        private final String name;
-
+    public class ShowItem extends BaseAction {
         public ShowItem(int key, String name) {
-            this.key = key;
-            this.name = name;
-        }
-
-        @Override
-        public int key() {
-            return this.key;
+            super(key, name);
         }
 
         @Override
@@ -90,29 +80,14 @@ public class MenuTracker {
             MenuTracker.this.outputItems(tracker.findAll());
             System.out.println("---------------------------------------------------");
         }
-
-        @Override
-        public String info() {
-            return String.format("%s. %s.", this.key, this.name);
-        }
     }
 
     /**
      * Поиск заметки по уникальному номеру.
      */
-    public class FindItemById implements UserAction {
-
-        private final int key;
-        private final String name;
-
+    public class FindItemById extends BaseAction {
         public FindItemById(int key, String name) {
-            this.key = key;
-            this.name = name;
-        }
-
-        @Override
-        public int key() {
-            return this.key;
+            super(key, name);
         }
 
         @Override
@@ -125,30 +100,15 @@ public class MenuTracker {
             }
             System.out.println("---------------------------------------------------");
         }
-
-        @Override
-        public String info() {
-            return String.format("%s. %s.", this.key, this.name);
-        }
     }
 
     /**
      * Юзер-экшн.
      * Поиск заметок по имени.
      */
-    public class FindItemsByName implements UserAction {
-
-        private final int key;
-        private final String name;
-
+    public class FindItemsByName extends BaseAction {
         public FindItemsByName(int key, String name) {
-            this.key = key;
-            this.name = name;
-        }
-
-        @Override
-        public int key() {
-            return this.key;
+            super(key, name);
         }
 
         @Override
@@ -158,28 +118,15 @@ public class MenuTracker {
             MenuTracker.this.outputItems(tracker.findByName(name));
             System.out.println("---------------------------------------------------");
         }
-
-        @Override
-        public String info() {
-            return String.format("%s. %s.", this.key, this.name);
-        }
     }
 
     /**
      * Юзер-экшн.
      * Редактировать заметку (по ID).
      */
-    public static class EditItem implements UserAction {
-        private final int key;
-        private final String name;
-
+    public static class EditItem extends BaseAction {
         public EditItem(int key, String name) {
-            this.key = key;
-            this.name = name;
-        }
-        @Override
-        public int key() {
-            return this.key;
+            super(key, name);
         }
 
         @Override
@@ -192,28 +139,15 @@ public class MenuTracker {
             String output = tracker.replace(id, item) ? "Исправлена" : "Не найдена";
             System.out.println(String.format("--------%s  заявка с ID : %s ---------", output, id));
         }
-
-        @Override
-        public String info() {
-            return String.format("%s. %s.", this.key, this.name);
-        }
     }
 
     /**
      * Юзер-экшн.
      * Удалить заметку (по ID).
      */
-    public static class DeleteItem implements UserAction {
-        private final int key;
-        private final String name;
-
+    public static class DeleteItem extends BaseAction {
         public DeleteItem(int key, String name) {
-            this.key = key;
-            this.name = name;
-        }
-        @Override
-        public int key() {
-            return this.key;
+            super(key, name);
         }
 
         @Override
@@ -222,11 +156,6 @@ public class MenuTracker {
             String id = input.ask("Введите ID заявки: ");
             String output = tracker.delete(id) ? "Удалена" : "Не найдена";
             System.out.println(String.format("--------%s  заявка с ID : %s ----------", output, id));
-        }
-
-        @Override
-        public String info() {
-            return String.format("%s. %s.", this.key, this.name);
         }
     }
 
@@ -245,17 +174,9 @@ public class MenuTracker {
  * Юзер-экшн.
  * Добавление заметки.
  */
-class AddItem implements UserAction {
-    private final int key;
-    private final String name;
-
+class AddItem extends BaseAction {
     public AddItem(int key, String name) {
-        this.key = key;
-        this.name = name;
-    }
-    @Override
-    public int key() {
-        return this.key;
+        super(key, name);
     }
 
     @Override
@@ -267,11 +188,6 @@ class AddItem implements UserAction {
         tracker.add(item);
         System.out.println(String.format("---------- Новая заявка с ID : %s -----------", item.getId()));
     }
-
-    @Override
-    public String info() {
-        return String.format("%s. %s.", this.key, this.name);
-    }
 }
 
 
@@ -279,20 +195,12 @@ class AddItem implements UserAction {
  * Юзер-экшн.
  * Выход из программы.
  */
-class ExitProgram implements UserAction {
-    private final int key;
-    private final String name;
-
+class ExitProgram extends BaseAction {
     private final StartUI ui;
 
     public ExitProgram(int key, String name, StartUI ui) {
-        this.key = key;
-        this.name = name;
+        super(key, name);
         this.ui = ui;
-    }
-    @Override
-    public int key() {
-        return this.key;
     }
 
     @Override
@@ -300,10 +208,5 @@ class ExitProgram implements UserAction {
         if ("y".equals(input.ask("Exit?(y): "))) {
             this.ui.finish();
         }
-    }
-
-    @Override
-    public String info() {
-        return String.format("%s. %s.", this.key, this.name);
     }
 }
