@@ -6,6 +6,8 @@ package ru.job4j.tracker;
  */
 public class StubInput implements Input {
 
+    private ConsoleInput pseudo = new ConsoleInput();
+
     /** содержит запрограммированную последовательность вводимых пользователем команд в консоль */
     private final String[] value;
 
@@ -33,14 +35,7 @@ public class StubInput implements Input {
     @Override
     public int ask(String question, int[] range) {
         int key = Integer.valueOf(this.ask(question));
-        boolean exist = false;
-        for (Integer value : range) {
-            if (key == value) {
-                exist = true;
-                break;
-            }
-        }
-        if (!exist) {
+        if (!this.pseudo.isCorrect(key, range)) {
             throw new MenuOutException("Out of menu range.");
         }
         return key;
