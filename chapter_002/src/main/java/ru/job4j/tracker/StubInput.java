@@ -35,7 +35,7 @@ public class StubInput implements Input {
     @Override
     public int ask(String question, int[] range) {
         int key = Integer.valueOf(this.ask(question));
-        if (!this.pseudo.isCorrect(key, range)) {
+        if (!this.pseudo.isNotCorrect(key, range)) {
             throw new MenuOutException("Out of menu range.");
         }
         return key;

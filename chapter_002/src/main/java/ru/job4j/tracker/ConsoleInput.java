@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class ConsoleInput implements Input {
     /** объект для считывания данных с консоли */
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     /**
      * Выводит в консоль переданную строку, возвращает полученный на неё ответ от пользователя.
@@ -27,17 +27,17 @@ public class ConsoleInput implements Input {
     @Override
     public int ask(String question, int[] range) {
         int key = Integer.valueOf(this.ask(question));
-        if (!isCorrect(key, range)) {
+        if (isNotCorrect(key, range)) {
             throw new MenuOutException("Out of menu range.");
         }
         return key;
     }
 
-    boolean isCorrect(int key, int[] range) {
-        boolean exist = false;
+    boolean isNotCorrect(int key, int[] range) {
+        boolean exist = true;
         for (int value : range) {
             if (value == key) {
-                exist = true;
+                exist = false;
                 break;
             }
         }
