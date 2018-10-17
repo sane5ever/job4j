@@ -81,4 +81,71 @@ public class ConvertMatrix2ListTest {
         List<Integer> result = converter.toList(input);
         assertThat(result, is(expected));
     }
+
+    @Test
+    public void when2ArraysInList() {
+        ConvertMatrix2List converter = new ConvertMatrix2List();
+        List<int[]> list = Arrays.asList(
+                new int[]{1, 2},
+                new int[]{3, 4, 5, 6}
+        );
+        List<Integer> expected = Arrays.asList(
+                1, 2, 3, 4, 5, 6
+        );
+        List<Integer> result = converter.convert(list);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void when1ArrayInList() {
+        ConvertMatrix2List converter = new ConvertMatrix2List();
+        List<int[]> list = Arrays.asList(
+                new int[]{1, 2, 3}
+        );
+        List<Integer> expected = Arrays.asList(
+                1, 2, 3
+        );
+        List<Integer> result = converter.convert(list);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void when4ArraysWithSingleElement() {
+        ConvertMatrix2List converter = new ConvertMatrix2List();
+        List<int[]> list = Arrays.asList(
+                new int[]{1},
+                new int[]{2},
+                new int[]{3},
+                new int[]{4}
+        );
+        List<Integer> expected = Arrays.asList(
+                1, 2, 3, 4
+        );
+        List<Integer> result = converter.convert(list);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void when5ArraysWithNoElement() {
+        ConvertMatrix2List converter = new ConvertMatrix2List();
+        List<int[]> list = Arrays.asList(
+                new int[]{},
+                new int[]{},
+                new int[]{},
+                new int[]{},
+                new int[]{}
+        );
+        List<Integer> expected = Collections.emptyList();
+        List<Integer> result = converter.convert(list);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenAbsolutelyEmptyList() {
+        ConvertMatrix2List converter = new ConvertMatrix2List();
+        List<int[]> list = Collections.emptyList();
+        List<Integer> expected = Collections.emptyList();
+        List<Integer> result = converter.convert(list);
+        assertThat(result, is(expected));
+    }
 }

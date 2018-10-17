@@ -27,4 +27,20 @@ public class ConvertMatrix2List {
         }
         return result;
     }
+
+    /**
+     * Объединяем список массивов в единый список.
+     *
+     * @param list список массимов чисел
+     * @return список, заполненный числами из массивов
+     */
+    public List<Integer> convert(List<int[]> list) {
+        List<Integer> result = new ArrayList<>();
+        for (int[] array : list) {
+            for (Integer num : array) {
+                result.add(num);
+            }
+        }
+        return result;
+    }
 }
