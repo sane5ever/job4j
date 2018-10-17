@@ -16,9 +16,9 @@ public class StartUITest {
     @Test
     public void whenUserAddItemThenTrackerHasNewItemWithSameName() {
         Tracker tracker = new Tracker();
-        Input input = new StubInput(new String[] {"0", "test name", "test desc", "6", "y"});
+        Input input = new StubInput(new String[]{"0", "test name", "test desc", "6", "y"});
         new StartUI(input, tracker).init();
-        assertThat(tracker.findAll()[0].getName(), is("test name"));
+        assertThat(tracker.findAll().get(0).getName(), is("test name"));
     }
 
     @Test
@@ -26,9 +26,9 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Item item = new Item("name", "test");
         tracker.add(item);
-        Input input = new StubInput(new String[] {"2", item.getId(), "fresh name", "update", "6", "y"});
+        Input input = new StubInput(new String[]{"2", item.getId(), "fresh name", "update", "6", "y"});
         new StartUI(input, tracker).init();
-        assertThat(tracker.findAll()[0].getName(), is("fresh name"));
+        assertThat(tracker.findAll().get(0).getName(), is("fresh name"));
     }
 
     @Test
@@ -36,17 +36,17 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Item item = new Item("name", "test");
         tracker.add(item);
-        Input input = new StubInput(new String[] {"3", item.getId(), "6", "y"});
+        Input input = new StubInput(new String[]{"3", item.getId(), "6", "y"});
         new StartUI(input, tracker).init();
-        assertThat(tracker.findAll().length, is(0));
+        assertThat(tracker.findAll().size(), is(0));
     }
 
     @Test
     public void whenTryToUpdateNonexistentItemThenTrackerHasNoChange() {
-        Tracker tracker =  new Tracker();
-        Input input = new StubInput(new String[] {"2", "123", "fresh", "update", "6", "y"});
+        Tracker tracker = new Tracker();
+        Input input = new StubInput(new String[]{"2", "123", "fresh", "update", "6", "y"});
         new StartUI(input, tracker).init();
-        assertThat(tracker.findAll().length, is(0));
+        assertThat(tracker.findAll().size(), is(0));
     }
 
     @Test
@@ -54,9 +54,9 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Item item = new Item("name", "desc");
         tracker.add(item);
-        Input input = new StubInput(new String[] {"3", "123", "6", "y"});
+        Input input = new StubInput(new String[]{"3", "123", "6", "y"});
         new StartUI(input, tracker).init();
-        assertThat(tracker.findAll().length, is(1));
+        assertThat(tracker.findAll().size(), is(1));
     }
 }
 

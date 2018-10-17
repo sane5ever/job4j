@@ -21,6 +21,7 @@ public class MenuTracker {
 
     /**
      * Формируем массив с ключами пунктов меню для проверки пользовательского ввода.
+     *
      * @return массив с ключами
      */
     public int[] getRange() {
@@ -47,6 +48,7 @@ public class MenuTracker {
 
     /**
      * Запускаем исполнение выбранного пользовательского действия.
+     *
      * @param key ключ пункта меню
      */
     public void select(int key) {
@@ -160,10 +162,20 @@ public class MenuTracker {
     }
 
     /**
-     * Осуществляем вывод заметок в консоль.
-     * @param items заметки
+     * Осуществляем вывод заметки в консоль.
+     *
+     * @param item заметка
      */
-    private void outputItems(Item... items) {
+    private void outputItems(Item item) {
+        System.out.println(item.toString());
+    }
+
+    /**
+     * Осуществляем вывод списка заметок в консоль.
+     *
+     * @param items список заметок
+     */
+    private void outputItems(List<Item> items) {
         for (Item item : items) {
             System.out.println(item.toString());
         }

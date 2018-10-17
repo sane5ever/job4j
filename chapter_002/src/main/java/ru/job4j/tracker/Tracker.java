@@ -11,29 +11,32 @@ import java.util.*;
  */
 public class Tracker {
 
-    /** массив для хранения заявок */
-    private final Item[] items = new Item[100];
+    /**
+     * массив для хранения заявок
+     */
+    private final List<Item> items = new ArrayList<>();
 
-    /** указатель ячейки для новой заявки */
-    private int position = 0;
-
-    /** для генерации уникального номера */
+    /**
+     * для генерации уникального номера
+     */
     private static final Random RN = new Random();
 
     /**
      * реализует добавление заявок
+     *
      * @param item новая заявка
      * @return успешно добавленная заявка
      */
     public Item add(Item item) {
         item.setId(this.generateId());
         item.setCreate(System.currentTimeMillis());
-        this.items[this.position++] = item;
+        this.items.add(item);
         return item;
     }
 
     /**
      * генерирует уникалньый ключ для заявки
+     *
      * @return уникальный ключ
      */
     private String generateId() {
@@ -42,7 +45,8 @@ public class Tracker {
 
     /**
      * реализует редактирование заявки
-     * @param id уникальный ключ заменяемой заявки
+     *
+     * @param id   уникальный ключ заменяемой заявки
      * @param item заменяющая заявка
      */
     public boolean replace(String id, Item item) {
@@ -51,14 +55,15 @@ public class Tracker {
         if (index != -1) {
             result = true;
             item.setId(id);
-            item.setCreate(this.items[index].getCreate());
-            this.items[index] = item;
+            item.setCreate(this.items.get(index).getCreate());
+            this.items.set(index, item);
         }
         return result;
     }
 
     /**
      * реализует удаление заявки
+     *
      * @param id уникальный ключ удаляемой заявки
      */
     public boolean delete(String id) {
@@ -66,54 +71,57 @@ public class Tracker {
         int index = this.findPositionById(id);
         if (index != -1) {
             result = true;
-            System.arraycopy(this.items, index + 1, this.items, index, --this.position - index);
+            this.items.remove(index);
         }
         return result;
     }
 
     /**
      * реализует получение списка всех заявок
+     *
      * @return массив с заявками
      */
-    public Item[] findAll() {
-        return Arrays.copyOf(this.items, position);
+    public List<Item> findAll() {
+        return this.items;
     }
 
     /**
      * реализует получение списка заявок с совпадающим именем
+     *
      * @param key имя искомых заявок
      * @return массив заявок
      */
-    public Item[] findByName(String key) {
-        Item[] result = new Item[this.position];
-        int pos = 0;
-        for (int index = 0; index != this.position; index++) {
-            if (this.items[index].getName().equals(key)) {
-                result[pos++] = this.items[index];
+    public List<Item> findByName(String key) {
+        List<Item> result = new ArrayList<>();
+        for (Item item : this.items) {
+            if (item.getName().equals(key)) {
+                result.add(item);
             }
         }
-        return Arrays.copyOf(result, pos);
+        return result;
     }
 
     /**
      * реализует получение заявки по уникальному ключу (при отсутствии - null)
+     *
      * @param id уникальный ключ
      * @return заявка
      */
     public Item findById(String id) {
         int index = this.findPositionById(id);
-        return index != -1 ? this.items[index] : null;
+        return index != -1 ? this.items.get(index) : null;
     }
 
     /**
      * возвращает позицию заявки в массиве по её уникальному ключу, при отсутствиии возвращает -1
+     *
      * @param id уникальный ключ
      * @return позиция в массиве
      */
     private int findPositionById(String id) {
         int result = -1;
-        for (int index = 0; index != this.position; index++) {
-            if (this.items[index].getId().equals(id)) {
+        for (int index = 0; index != this.items.size(); index++) {
+            if (this.items.get(index).getId().equals(id)) {
                 result = index;
                 break;
             }
