@@ -7,7 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -48,5 +49,47 @@ public class SortUserTest {
         List<User> users = Collections.emptyList();
         Set<User> result = sorter.sort(users);
         assertThat(result, is(Collections.emptySet()));
+    }
+
+    @Test
+    public void whenUnsortedThenSortedByNameLength() {
+        SortUser sorter = new SortUser();
+        List<User> users = Arrays.asList(
+                new User("Sergei", 25),
+                new User("Ivan", 30),
+                new User("Tom", 15),
+                new User("Sergei", 20)
+        );
+        List<User> expected = Arrays.asList(
+                new User("Tom", 15),
+                new User("Ivan", 30),
+                new User("Sergei", 25),
+                new User("Sergei", 20)
+        );
+        assertThat(
+                sorter.sortNameLength(users).toString(),
+                is(expected.toString())
+        );
+    }
+
+    @Test
+    public void whenUnsortedThenSortedByNameAndAge() {
+        SortUser sorter = new SortUser();
+        List<User> users = Arrays.asList(
+                new User("Sergei", 25),
+                new User("Ivan", 30),
+                new User("Sergei", 20),
+                new User("Ivan", 25)
+        );
+        List<User> expected = Arrays.asList(
+                new User("Ivan", 25),
+                new User("Ivan", 30),
+                new User("Sergei", 20),
+                new User("Sergei", 25)
+        );
+        assertThat(
+                sorter.sortByAllFields(users).toString(),
+                is(expected.toString())
+        );
     }
 }
