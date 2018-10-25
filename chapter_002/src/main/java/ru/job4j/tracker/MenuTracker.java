@@ -60,11 +60,9 @@ public class MenuTracker {
      */
     public void show() {
         System.out.println("Menu.");
-        for (UserAction action : this.actions) {
-            if (action != null) {
-                System.out.println(action.info());
-            }
-        }
+        this.actions.forEach(
+                action -> System.out.println(action.info())
+        );
     }
 
     /**
@@ -79,7 +77,7 @@ public class MenuTracker {
         @Override
         public void execute(Input input, Tracker tracker) {
             System.out.println("------------ Вывод имеющихся заявок ---------------");
-            MenuTracker.this.outputItems(tracker.findAll());
+            tracker.findAll().forEach(System.out::println);
             System.out.println("---------------------------------------------------");
         }
     }
@@ -98,7 +96,7 @@ public class MenuTracker {
             String id = input.ask("Введите ID заявки: ");
             Item item = tracker.findById(id);
             if (item != null) {
-                MenuTracker.this.outputItems(item);
+                System.out.println(item);
             }
             System.out.println("---------------------------------------------------");
         }
@@ -117,7 +115,7 @@ public class MenuTracker {
         public void execute(Input input, Tracker tracker) {
             System.out.println("--------------- Поиск заявок по имени --------------");
             String name = input.ask("Введите ключевое имя: ");
-            MenuTracker.this.outputItems(tracker.findByName(name));
+            tracker.findByName(name).forEach(System.out::println);
             System.out.println("---------------------------------------------------");
         }
     }
@@ -158,26 +156,6 @@ public class MenuTracker {
             String id = input.ask("Введите ID заявки: ");
             String output = tracker.delete(id) ? "Удалена" : "Не найдена";
             System.out.println(String.format("--------%s  заявка с ID : %s ----------", output, id));
-        }
-    }
-
-    /**
-     * Осуществляем вывод заметки в консоль.
-     *
-     * @param item заметка
-     */
-    private void outputItems(Item item) {
-        System.out.println(item.toString());
-    }
-
-    /**
-     * Осуществляем вывод списка заметок в консоль.
-     *
-     * @param items список заметок
-     */
-    private void outputItems(List<Item> items) {
-        for (Item item : items) {
-            System.out.println(item.toString());
         }
     }
 }

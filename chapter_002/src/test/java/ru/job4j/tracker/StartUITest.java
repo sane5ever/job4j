@@ -14,6 +14,14 @@ import static org.junit.Assert.assertThat;
  */
 public class StartUITest {
     @Test
+    public void whenEmpty() {
+        Tracker tracker = new Tracker();
+        Input input = new StubInput(new String[]{"1", "6", "y"});
+        new StartUI(input, tracker).init();
+        assertThat(tracker.findAll().isEmpty(), is(true));
+    }
+
+    @Test
     public void whenUserAddItemThenTrackerHasNewItemWithSameName() {
         Tracker tracker = new Tracker();
         Input input = new StubInput(new String[]{"0", "test name", "test desc", "6", "y"});
