@@ -1,6 +1,7 @@
 package ru.job4j.tracker;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Используется как хранилище заявок.
@@ -92,13 +93,10 @@ public class Tracker {
      * @return массив заявок
      */
     public List<Item> findByName(String key) {
-        List<Item> result = new ArrayList<>();
-        for (Item item : this.items) {
-            if (item.getName().equals(key)) {
-                result.add(item);
-            }
-        }
-        return result;
+        return this.items.stream().filter(
+                item -> item.getName().equals(key)
+        )
+                .collect(Collectors.toList());
     }
 
     /**
