@@ -93,14 +93,16 @@ public class Manager {
      * @return пользователь (либо null, если не найден)
      */
     private User findUser(String passport) {
-        User result = null;
-        for (Map.Entry<User, List<Account>> entry : this.users.entrySet()) {
-            if (entry.getKey().getPassport().equals(passport)) {
-                result = entry.getKey();
-                break;
-            }
-        }
-        return result;
+        return this.users.entrySet()
+                .stream()
+                .filter(
+                        entry -> entry
+                                .getKey()
+                                .getPassport()
+                                .equals(passport)
+                ).findFirst()
+                .map(Map.Entry::getKey)
+                .orElse(null);
     }
 
     /**
@@ -111,14 +113,14 @@ public class Manager {
      * @return номер счёта в списке (либо -1, если не найден)
      */
     private Account findAccount(String passport, String requisite) {
-        Account result = null;
-        for (Account account : this.getUserAccounts(passport)) {
-            if (account.getRequisites().equals(requisite)) {
-                result = account;
-                break;
-            }
-        }
-        return result;
+        return this.getUserAccounts(passport)
+                .stream()
+                .filter(
+                        account -> account
+                                .getRequisites()
+                                .equals(requisite)
+                ).findFirst()
+                .orElse(null);
     }
 
     /**

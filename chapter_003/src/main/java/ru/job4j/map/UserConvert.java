@@ -2,6 +2,9 @@ package ru.job4j.map;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Преобразование списка пользователей в Map.
@@ -19,10 +22,12 @@ public class UserConvert {
      * @return хеш-таблица пользователей
      */
     public HashMap<Integer, User> process(List<User> list) {
-        HashMap<Integer, User> result = new HashMap<>();
-        for (User user : list) {
-            result.put(user.getId(), user);
-        }
-        return result;
+        return list.stream()
+                .collect(Collectors.toMap(
+                        User::getId,
+                        Function.identity(),
+                        (older, newer) -> newer,
+                        HashMap::new
+                ));
     }
 }
