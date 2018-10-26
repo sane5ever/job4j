@@ -26,12 +26,6 @@ public class User {
         return name;
     }
 
-    Example example = new Example("") {
-        void write() {
-            System.out.println(super.name);
-        }
-    };
-
     @Override
     public boolean equals(Object o) {
         boolean result = false;
@@ -47,13 +41,5 @@ public class User {
     @Override
     public int hashCode() {
         return this.passport != null ? this.passport.hashCode() : 0;
-    }
-}
-
-abstract class Example {
-    String name;
-
-    public Example(String name) {
-        this.name = name;
     }
 }
