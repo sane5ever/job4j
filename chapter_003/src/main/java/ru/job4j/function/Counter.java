@@ -29,37 +29,4 @@ public class Counter {
         }
         return result;
     }
-
-    /**
-     * Линейная фунцкия.
-     *
-     * @param start начало лиапазона
-     * @param end   конец диапазона
-     * @return значения функции
-     */
-    public List<Double> linear(int start, int end) {
-        return this.diapason(start, end, aDouble -> aDouble);
-    }
-
-    /**
-     * Квадратичная фунцкия.
-     *
-     * @param start начало лиапазона
-     * @param end   конец диапазона
-     * @return значения функции
-     */
-    public List<Double> quadratic(int start, int end) {
-        return this.diapason(start, end, aDouble -> aDouble * aDouble);
-    }
-
-    /**
-     * Логарифмическая фунцкия.
-     *
-     * @param start начало лиапазона
-     * @param end   конец диапазона
-     * @return значения функции
-     */
-    public List<Double> logarithmic(int start, int end) {
-        return this.diapason(start, end, Math::log);
-    }
 }
