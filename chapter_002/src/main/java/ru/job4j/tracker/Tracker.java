@@ -2,6 +2,8 @@ package ru.job4j.tracker;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Используется как хранилище заявок.
@@ -117,13 +119,9 @@ public class Tracker {
      * @return позиция в массиве
      */
     private int findPositionById(String id) {
-        int result = -1;
-        for (int index = 0; index != this.items.size(); index++) {
-            if (this.items.get(index).getId().equals(id)) {
-                result = index;
-                break;
-            }
-        }
-        return result;
+        return IntStream.range(0, this.items.size())
+                .filter(index -> this.items.get(index).getId().equals(id))
+                .findFirst().orElse(-1);
+
     }
 }
