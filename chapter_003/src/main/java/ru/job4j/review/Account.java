@@ -1,55 +1,101 @@
-package com;
+package ru.job4j.review;
 
 
+import java.util.Objects;
+
+/**
+ * Bank account. Represent something.
+ */
 public class Account {
+    /**
+     * account value in euro (or something)
+     */
+    private double value;
+    /**
+     * account requisites (use to connect with someone else)
+     */
+    private String requisites;
 
-    double values;
-    String reqs;
-
-    public Account(double values, String requisites) {
-        this.values = values;
-        this.reqs = requisites;
+    /**
+     * Start an account.
+     *
+     * @param value      value on start
+     * @param requisites requisites must not be null
+     */
+    public Account(double value, String requisites) {
+        this.value = value;
+        this.requisites = Objects.requireNonNull(requisites, "requisites must not be null");
     }
 
-    public double getValues() {
-        return this.values;
+    /**
+     * @return current value in euro (or something)
+     */
+    public double getValue() {
+        return this.value;
     }
 
-
-    public String getReqs () {
-        return this.reqs;
+    /**
+     * @return unique requisites
+     */
+    public String getRequisites() {
+        return this.requisites;
     }
 
-    boolean transfer(Account destination, double amount) {
+    /**
+     * Make a transfer to another user.
+     *
+     * @param destination destination account
+     * @param amount      transfer amount
+     * @return {@code true} if success
+     */
+    protected synchronized boolean transfer(Account destination, double amount) {
         boolean success = false;
-        if (amount > 0 && amount < this.values && destination != null) {
+        if (destination != null && amount > 0 && amount < this.value) {
+            this.value -= amount;
+            destination.value += amount;
             success = true;
-            this.values -= amount;
-            destination.values += amount;
         }
         return success;
     }
 
+    /**
+     * String representation of account
+     *
+     * @return string line
+     */
+    @Override
     public String toString() {
-        String otvet;
-        otvet = "Account{" + "values=" + values + ", reqs='" + reqs + "\\" + "}";
-        return otvet;
+        return String.format("%s: %.2f eur", this.requisites, this.value);
     }
 
+    /**
+     * Compares the specified object with this account for equality.
+     * Checks {@link #requisites} field only.
+     *
+     * @param o another object
+     * @return {@code true} if equals
+     */
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
 
         Account account = (Account) o;
-
-        return this.reqs.equals(account.reqs);
+        return this.requisites.equals(account.requisites);
     }
 
+    /**
+     * Returns the hash code value for this account.
+     * Based on {@link #requisites} field only.
+     *
+     * @return the hash code value
+     */
+    @Override
     public int hashCode() {
-        return this.reqs.hashCode();
+        return this.requisites.hashCode();
     }
 }

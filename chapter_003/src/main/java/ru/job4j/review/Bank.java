@@ -1,51 +1,119 @@
-package com;
+package ru.job4j.review;
 
+import ru.job4j.sort.User;
 
+import java.util.*;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-
-
+/**
+ * Bank manager. Do something beautiful.
+ */
 public class Bank {
+    /**
+     * Mapping users to their accounts.
+     */
+    private Map<User, List<Account>> users = new HashMap<>();
 
-    private TreeMap<User, ArrayList<Account>> treemap = new TreeMap<>();
-
-    public void addUser(User user) {
-        this.treemap.put(user, new ArrayList<>());
+    /**
+     * Adding a new user.
+     * If user already exists in the base, manager will refuse it.
+     *
+     * @param user a new user (expect it!)
+     * @return {@code true} if it succeed
+     */
+    public boolean add(User user) {
+        return this.users.putIfAbsent(Objects.requireNonNull(user), new ArrayList<>()) == null;
     }
 
-    public void delete(User user) {
-        this.treemap.remove(user);
+    /**
+     * Deleting user.
+     *
+     * @param user user's about to be deleted
+     * @return {@code true} if it succeed
+     */
+    public boolean delete(User user) {
+        return this.users.remove(user) != null;
     }
 
-    public void add(User user, Account account) {
-        this.treemap.get(user).add(account);
+    /**
+     * Adding an account to user.
+     * Checks if user exists in the base and account doesn't.
+     *
+     * @param user    user
+     * @param account new account
+     * @return {@code true} if it succeed
+     */
+    public boolean addAccount(User user, Account account) {
+        List<Account> accounts = this.getAccounts(user);
+        return accounts != null
+                && accounts.indexOf(account) == -1
+                && accounts.add(account);
     }
 
-    private Account getActualAccount(User user, Account account) {
-        ArrayList<Account> list = this.treemap.get(user);
-        return list.get(list.indexOf(account));
+    /**
+     * Removing an account from the base.
+     * Check if user exists in the base.
+     *
+     * @param user    user
+     * @param account account's about to be deleted
+     * @return {@code true} if it succeed
+     */
+    public boolean deleteAccount(User user, Account account) {
+        return this.users.containsKey(user)
+                && this.users.get(user).remove(account);
     }
 
-    public void deleteAccount(User user, Account account) {
-        this.treemap.get(user).remove(account);
-    }
-
+    /**
+     * Getting all accounts of this user.
+     *
+     * @param user user
+     * @return user accounts, or {@code null} if they doesn't exist in the base
+     */
     public List<Account> getAccounts(User user) {
-        return this.treemap.get(user);
+        return this.users.get(user);
     }
 
-    public boolean transfer(User user1, Account account1,
-                                 User user2, Account account2, double amount) {
-        return this.treemap.get(user1).contains(account1)
-                && this.treemap.get(user2).contains(account2)
-                && getActualAccount(user1, account1).transfer(
-                getActualAccount(user2, account2), amount);
+    /**
+     * Tries to transfer money from sender to receiver.
+     * At first, checks if users exist in the base, and their accounts do too.
+     *
+     * @param sender      user sending money
+     * @param from        account that money goes from
+     * @param receiver    user receiving money
+     * @param destination account where money goes to
+     * @param amount      amount to send
+     * @return {@code true} if succeed
+     */
+    public boolean transfer(User sender, Account from,
+                            User receiver, Account destination, double amount) {
+        return this.check(sender, from, receiver, destination)
+                && from.transfer(destination, amount);
     }
 
+    private boolean check(User sender, Account from, User receiver, Account destination) {
+        return this.users.containsKey(sender)
+                && this.getAccounts(sender).contains(from)
+                && this.users.containsKey(receiver)
+                && this.getAccounts(receiver).contains(destination);
+    }
+
+    /**
+     * String representation of account.
+     *
+     * @return string line
+     */
+    @Override
     public String toString() {
-        return "Bank{" + "accounts=" + treemap + "}";
+        StringBuilder buffer = new StringBuilder("Bank contains the following clients: ");
+        this.users.forEach((user, accounts) -> buffer
+                .append(System.lineSeparator())
+                .append(user.getName())
+                .append(", aged ")
+                .append(user.getAge())
+                .append(", accounts: ")
+                .append(accounts)
+
+        );
+        return buffer.toString();
+
     }
 }
