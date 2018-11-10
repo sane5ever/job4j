@@ -16,154 +16,137 @@ public class DepartmentSorter {
      * в этом поле храним символ, по кот. проходит сепарация департаментов и их подразделений
      */
     private final char splitter;
+    /**
+     * в этом поле храним базу департаментов, отсортированную по возрастанию
+     */
+    private Set<String> data = new TreeSet<>(
+            (first, second) -> this.compareDepartments(first, second, false)
+    );
+
+    /**
+     * в этом поле храним базу департаментов, отсортированную по убыванию,
+     * для поддержания правильного порядка используем компаратор
+     */
+    private Set<String> descendingData = new TreeSet<>(
+            (first, second) -> this.compareDepartments(first, second, true)
+    );
 
     /**
      * конструктор без параметров, инициализирует поле с разделителем
      * стандартным символом (backslash)
+     *
+     * @param departments строки с департаментами для послед. сортировки
      */
-    public DepartmentSorter() {
-        this('\\');
+    public DepartmentSorter(String[] departments) {
+        this(departments, '\\');
     }
 
     /**
      * конструктор, позволяющий задать символ, разделяющий подразделения,
      * отличный от используемого по умолчанию
      *
-     * @param splitter символ-разделитель
+     * @param departments строки с департаментами для послед. сортировки
+     * @param splitter    символ-разделитель
      */
-    public DepartmentSorter(char splitter) {
+    public DepartmentSorter(String[] departments, char splitter) {
         this.splitter = splitter;
+        this.initData(departments);
     }
 
     /**
-     * внутренний класс, каркас для подразделений в иерархии департаментов;
-     * каждый департамент хранит ссылку на департамент, подразделением кот.
-     * явл. данный (parent), а также на все собственные поразделения (children);
-     * реализует интерфейс Comparable, упрощяющий последующую сортировку департаментов;
-     * методы {@link #compareTo(Department)}, {@link #hashCode()} и {@link #equals(Object)}
-     * включают в себя проверку по полю {@link #name}, по кот. и осуществляется сравнение департаментов
-     */
-    private class Department implements Comparable<Department> {
-        String name;
-        Department parent;
-        List<Department> children;
-
-        public Department(String name, Department parent) {
-            this.name = name;
-            this.parent = parent;
-            this.children = new ArrayList<>();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            Department that = (Department) o;
-            return name.equals(that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return name.hashCode();
-        }
-
-        @Override
-        public int compareTo(Department o) {
-            return this.name.compareTo(o.name);
-        }
-    }
-
-    /**
-     * первая часть задания:
-     * из набора строк с кодами подразделений воссоздаём их полную иерархию (дерево)
-     * на основе внутреннего класса Department с помощью ArrayList.
+     * производим заполнение полей с базой департаментов
      *
-     * @param departments массив строк подразделений
-     * @return иерархия подразделений (без null-корня)
+     * @param departments строки с департаментами
      */
-    private List<Department> collect(String[] departments) {
-        Department root = new Department(null, null);
-        StringBuilder buffer = new StringBuilder();
-        StringBuilder source = new StringBuilder();
+    private void initData(String[] departments) {
         for (String department : departments) {
-            this.collectLine(root, source.append(department).append(this.splitter), buffer);
-        }
-        return root.children;
-    }
-
-    /**
-     * идём посимвольно по строке с кодом подразделения, при каждой встрече символа-разделителя
-     * рекурсивно создаём очередного потомка из скопившихся в буфере символов (с начала строки
-     * до текущего разделителя не включачая), добавляем в иерархию департаментов (если такого
-     * ещё нет, иначе используем уже существующий);
-     * по завершении прохода по строке очищаем символьные буферы для следующей линии.
-     *
-     * @param root   корень (нулевой) создаваемой иерархии, к кот. цепляем ветви из очередной строки
-     * @param source буфер-источник с кодом подразделения
-     * @param buffer пустой буфер, в кот. собираем посимвольно имена подраздений (от верхнего уровня)
-     */
-    private void collectLine(Department root, StringBuilder source, StringBuilder buffer) {
-        Department parent = root;
-        for (int position = 0; position < source.length(); position++) {
-            char symbol = source.charAt(position);
-            if (symbol == this.splitter) {
-                Department child = new Department(buffer.toString(), parent);
-                int index = parent.children.indexOf(child);
-                if (index == -1) {
-                    parent.children.add(child);
-                    parent = child;
-                } else {
-                    parent = parent.children.get(index);
-                }
+            int position = department.indexOf(this.splitter);
+            while (position != -1) {
+                this.addToData(department.substring(0, position));
+                position = department.indexOf(this.splitter, position + 1);
             }
-            buffer.append(symbol);
+            this.addToData(department);
         }
-        buffer.setLength(0);
-        source.setLength(0);
     }
 
     /**
-     * вторая часть задания:
-     * рекурсивно сортируем получаенную в методе {@link #collect} иерархию депортаментов
-     * с помощью передаваемого компаратора (для обоих пунктов задания)
+     * осуществляем сравнение двух строк-департаментов, используем в сепараторе
      *
-     * @param departments подразделения одного уровня
-     * @param comparator  компаратор
-     * @return рекурсивно наполняемый в отсортированном порядке лист подразделений
+     * @param first   первый департамент
+     * @param second  второй департамент
+     * @param reverse включаем режим нисходящего порядка
+     * @return аналогично стандартным принципам сравнения объектов
      */
-    private List<String> accumulate(List<Department> departments, Comparator<Department> comparator) {
-        List<String> result = new ArrayList<>();
-        departments.sort(comparator);
-        for (Department department : departments) {
-            result.add(department.name);
-            result.addAll(this.accumulate(department.children, comparator));
+    public int compareDepartments(String first, String second, boolean reverse) {
+        int minLevel = Math.min(this.departmentLevel(first), this.departmentLevel(second));
+        int result = 0;
+        for (int level = 0; level <= minLevel && result == 0; level++) {
+            result = this.substring(first, level).compareTo(this.substring(second, level));
         }
-        return result;
+        return result != 0 ? (reverse ? -1 * result : result) : Integer.compare(first.length(), second.length());
     }
 
     /**
-     * интерфейсный метод, явл. входом при восходящей сортировке
+     * получаем super-департамент заданного уровня (определяется по нахождению {@link #splitter) в строке)
      *
-     * @param departments входящий массив строк департаментов
-     * @return отсортированный массив департаментов
+     * @param department поддепартамент
+     * @param level      необходимый уровень
+     * @return super-департамент (только сам)
      */
-    public String[] ascending(String[] departments) {
-        return this.accumulate(this.collect(departments), Comparator.naturalOrder())
-                .toArray(new String[0]);
+    private String substring(String department, int level) {
+        int start = 0;
+        int finish = department.indexOf(this.splitter);
+        for (int count = 0; count < level; count++) {
+            start = finish + 1;
+            finish = department.indexOf(this.splitter, finish + 1);
+        }
+        finish = finish == -1 ? department.length() : finish;
+        return department.substring(start, finish);
     }
 
     /**
-     * интерфейсный метод, явл. входом при нисходящей сортировке
+     * вычисляем уровень вложенности департамента (равен количеству {@link #splitter) в строке)
      *
-     * @param departments входящий массив строк департаментов
-     * @return отсортированный массив департаментов
+     * @param department полное имя департамента
+     * @return уровень вложенности
      */
-    public String[] descending(String[] departments) {
-        return this.accumulate(this.collect(departments), Comparator.reverseOrder())
-                .toArray(new String[0]);
+    private int departmentLevel(String department) {
+        int count = 0;
+        int position = department.indexOf(this.splitter);
+        while (position != -1) {
+            count++;
+            position = department.indexOf(this.splitter, position + 1);
+        }
+        return count;
+    }
+
+    /**
+     * передаём очередной департамент на хранение в базы
+     *
+     * @param part департамент
+     */
+    private void addToData(String part) {
+        this.data.add(part);
+        this.descendingData.add(part);
+    }
+
+    /**
+     * выдаём пользователю иерархию департаментов, нарезанную и отсортированную по возрастанию
+     * (с сохранением иерархии)
+     *
+     * @return иерархия департаментов в виде строковго массива
+     */
+    public String[] getData() {
+        return this.data.toArray(new String[0]);
+    }
+
+    /**
+     * выдаём пользователю иерархию департаментов, нарезанную и отсортированную по убыванию
+     * (с сохранением иерархии)
+     *
+     * @return иерархия департаментов в виде строковго массива
+     */
+    public String[] getDescendingData() {
+        return this.descendingData.toArray(new String[0]);
     }
 }
