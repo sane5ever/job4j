@@ -168,14 +168,14 @@ public class DepartmentSorterTest {
     @Test
     public void whenUntypicalDescending() {
         String[] input = new String[]{
-                "K2\\SK10\\SSK10",
+                "K2\\SK1\\SSK10",
                 "K2\\SK11",
         };
         String[] expected = new String[]{
                 "K2",
                 "K2\\SK11",
-                "K2\\SK10",
-                "K2\\SK10\\SSK10"
+                "K2\\SK1",
+                "K2\\SK1\\SSK10"
         };
         this.execute(input, expected, true);
     }

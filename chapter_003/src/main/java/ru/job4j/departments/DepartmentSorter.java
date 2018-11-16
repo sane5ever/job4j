@@ -83,7 +83,7 @@ public class DepartmentSorter {
         for (int level = 0; level <= minLevel && result == 0; level++) {
             result = this.substring(first, level).compareTo(this.substring(second, level));
         }
-        return result != 0 ? (reverse ? -1 * result : result) : Integer.compare(first.length(), second.length());
+        return result != 0 ? (reverse ? -result : result) : Integer.compare(first.length(), second.length());
     }
 
     /**
