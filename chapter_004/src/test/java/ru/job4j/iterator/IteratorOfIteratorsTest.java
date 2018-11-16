@@ -97,5 +97,11 @@ public class IteratorOfIteratorsTest {
         assertThat(it.next(), is(3));
         it.next();
     }
+
+    @Test
+    public void whenNull() {
+        it = new IteratorOfIterators().convert(null);
+        assertThat(it.hasNext(), is(false));
+    }
 }
 
