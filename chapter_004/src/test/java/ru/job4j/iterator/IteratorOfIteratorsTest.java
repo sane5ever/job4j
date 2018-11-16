@@ -99,8 +99,10 @@ public class IteratorOfIteratorsTest {
     }
 
     @Test
-    public void whenNull() {
+    public void whenNullOrEmpty() {
         it = new IteratorOfIterators().convert(null);
+        assertThat(it.hasNext(), is(false));
+        it = new IteratorOfIterators().convert(new ArrayList<Iterator<Integer>>().iterator());
         assertThat(it.hasNext(), is(false));
     }
 }
