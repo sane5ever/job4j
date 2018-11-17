@@ -31,6 +31,15 @@ public class SimpleArray<E> implements Iterable<E> {
     }
 
     /**
+     * возвращает кол-во добавленных эл-тов в хранилище
+     *
+     * @return колво эл-тов
+     */
+    public int size() {
+        return this.size;
+    }
+
+    /**
      * добавляем в массив очередной эл-т
      * добавление возможно пока хранилище не заполнено
      *
@@ -159,7 +168,6 @@ public class SimpleArray<E> implements Iterable<E> {
      *
      * @param index номер ячейки
      * @throws IndexOutOfBoundsException номер ячейки не попал в область допустимых индексов
-     *
      */
     private void check(int index) {
         if (this.size <= index || index < 0) {
