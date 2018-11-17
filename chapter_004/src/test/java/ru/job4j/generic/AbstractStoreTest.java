@@ -25,7 +25,7 @@ public class AbstractStoreTest {
         User first = new User("123");
         User second = new User("111");
         UserStore store = new UserStore();
-        this.test(store, first, second);
+        this.execute(store, first, second);
         this.addToEmptyStore(new UserStore(0), first);
     }
 
@@ -34,12 +34,12 @@ public class AbstractStoreTest {
         Role first = new Role("123");
         Role second = new Role("111");
         RoleStore store = new RoleStore();
-        this.test(store, first, second);
+        this.execute(store, first, second);
         this.addToEmptyStore(new RoleStore(0), first);
 
     }
 
-    private <T extends Base> void test(Store<T> store, T first, T second) {
+    private <T extends Base> void execute(Store<T> store, T first, T second) {
         store.add(first);
         assertThat(store.delete(null), is(false));
         assertThat(store.findById(first.getId()), is(first));
@@ -50,8 +50,6 @@ public class AbstractStoreTest {
         assertNull(store.findById(second.getId()));
         assertThat(store.replace(first.getId(), second), is(false));
         assertThat(store.delete(first.getId()), is(false));
-        store.replace(first.getId(), second);
-        store.findById(first.getId());
     }
 
     private <T extends Base> void addToEmptyStore(Store<T> store, T first) {
