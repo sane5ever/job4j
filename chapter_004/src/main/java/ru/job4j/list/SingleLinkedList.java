@@ -1,9 +1,9 @@
 package ru.job4j.list;
 
 /**
- * Класс SimpleArrayList.
+ * Класс SingleLinkedList.
  */
-public class SimpleArrayList<E> {
+public class SingleLinkedList<E> {
     private int size;
     private Node<E> first;
 

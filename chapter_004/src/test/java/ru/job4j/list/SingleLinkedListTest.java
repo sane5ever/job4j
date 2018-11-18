@@ -7,13 +7,13 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class SimpleArrayListTest {
+public class SingleLinkedListTest {
 
-    private SimpleArrayList<Integer> list;
+    private SingleLinkedList<Integer> list;
 
     @Before
     public void prepare() {
-        this.list = new SimpleArrayList<>();
+        this.list = new SingleLinkedList<>();
         this.list.add(1);
         this.list.add(2);
         this.list.add(3);
