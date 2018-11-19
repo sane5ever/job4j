@@ -35,14 +35,12 @@ public class SimpleArrayListTest {
     }
 
     @Test
-    public void whenAddThreeElementsShouldBeAddedInSameOrder() {
-        assertThat(this.numbers.get(0), is(0));
-        assertThat(this.numbers.get(1), is(1));
-        assertThat(this.numbers.get(2), is(2));
+    public void whenAddTenElementsShouldBeAddedInSameOrder() {
+        IntStream.range(0, 10).forEach(i -> assertThat(this.numbers.get(i), is(i)));
     }
 
     @Test
-    public void whenAddThreeElementsWithStartCapacityThreeThenAddMoreElementsShouldBeAvailable() {
+    public void whenAddTenElementsWithStartCapacityTenThenAddMoreElementsShouldBeAvailable() {
         assertThat(this.numbers.add(0), is(true));
         assertThat(this.numbers.get(10), is(0));
     }
