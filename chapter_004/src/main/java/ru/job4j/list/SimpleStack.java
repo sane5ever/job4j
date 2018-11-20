@@ -40,4 +40,13 @@ public class SimpleStack<E> {
     public void push(E value) {
         this.base.add(value);
     }
+
+    /**
+     * Возвращает true, если в стеке нет элементов.
+     *
+     * @return true, если эл-тов нет
+     */
+    public boolean isEmpty() {
+        return !this.base.iterator().hasNext();
+    }
 }
