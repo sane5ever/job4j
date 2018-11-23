@@ -88,4 +88,23 @@ public class TreeTest {
             this.iterator.next();
         }
     }
+
+    @Test
+    public void whenChildrenAmountIsThreeThenIsBinaryReturnsFalse() {
+        assertThat(this.tree.isBinary(), is(false));
+    }
+
+    @Test
+    public void whenChildrenAmountTwoOrLessThenIsBinaryReturnsTrue() {
+        this.tree = new Tree<>(0);
+        this.tree.add(0, 1);
+        this.tree.add(0, 2);
+        this.tree.add(1, 3);
+        this.tree.add(1, 4);
+        this.tree.add(2, 5);
+        this.tree.add(2, 6);
+        this.tree.add(4, 7);
+        this.tree.add(5, 8);
+        assertThat(this.tree.isBinary(), is(true));
+    }
 }

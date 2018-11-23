@@ -1,6 +1,7 @@
 package ru.job4j.tree;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Элементарная структура дерева.
@@ -56,21 +57,43 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
      */
     @Override
     public Optional<Node<E>> findBy(E value) {
+        return this.findNode(node -> node.eqValue(value));
+    }
+
+    /**
+     * Проверяет является ли дерево бинарным (кол-во потомков каждого узла не превышает два).
+     * С помощью {@link #findNode(Predicate)} ищет узел с кол-вом потомков больше двух.
+     * По наличию/отсутствию такого узла возращает true/false.
+     *
+     * @return true, если узлов с потомками > 2 не найдено.
+     */
+    public boolean isBinary() {
+        return !this.findNode(node -> node.leaves().size() > 2).isPresent();
+    }
+
+    /**
+     * Возвращает узел дерева, удовлетворяющий переданному условию.
+     *
+     * @param predicate условие
+     * @return контейнер, кот. содержит искомый элемент (если присутствует)
+     */
+    private Optional<Node<E>> findNode(Predicate<Node<E>> predicate) {
         Optional<Node<E>> result = Optional.empty();
-        Queue<Node<E>> data = new LinkedList<>();
-        data.offer(this.root);
-        while (!data.isEmpty()) {
-            Node<E> element = data.poll();
-            if (element.eqValue(value)) {
+        Queue<Node<E>> order = new LinkedList<>();
+        order.offer(this.root);
+        while (!order.isEmpty()) {
+            Node<E> element = order.poll();
+            if (predicate.test(element)) {
                 result = Optional.of(element);
                 break;
             }
             for (Node<E> child : element.leaves()) {
-                data.offer(child);
+                order.offer(child);
             }
         }
         return result;
     }
+
 
     /**
      * Возвращает итератор для последовательного прохода в ширину по элементам дерева.
