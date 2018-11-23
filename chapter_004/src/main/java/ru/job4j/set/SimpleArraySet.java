@@ -37,6 +37,7 @@ public class SimpleArraySet<E> implements Iterable<E> {
         for (E element : this) {
             if (element.equals(e)) {
                 result = true;
+                break;
             }
         }
         return result;
