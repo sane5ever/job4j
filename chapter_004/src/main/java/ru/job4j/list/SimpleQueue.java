@@ -37,9 +37,6 @@ public class SimpleQueue<E> {
      * @param value добавляемое значение
      */
     public void push(E value) {
-        if (this.input.isEmpty()) {
-            this.shift(this.output, this.input);
-        }
         this.input.push(value);
     }
 

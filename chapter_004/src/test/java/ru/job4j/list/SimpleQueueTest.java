@@ -37,4 +37,22 @@ public class SimpleQueueTest {
                 }
         );
     }
+
+    @Test
+    public void when() {
+        this.queue.push(0);
+        this.queue.push(1);
+        this.queue.push(2);
+        this.queue.push(3);
+        assertThat(this.queue.poll(), is(0));
+        assertThat(this.queue.poll(), is(1));
+        this.queue.push(4);
+        this.queue.push(5);
+        assertThat(this.queue.poll(), is(2));
+        assertThat(this.queue.poll(), is(3));
+        this.queue.push(6);
+        assertThat(this.queue.poll(), is(4));
+        assertThat(this.queue.poll(), is(5));
+        assertThat(this.queue.poll(), is(6));
+    }
 }
