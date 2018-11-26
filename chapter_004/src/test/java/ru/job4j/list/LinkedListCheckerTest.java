@@ -61,4 +61,14 @@ public class LinkedListCheckerTest {
         assertThat(this.checker.hasCycle(first), is(true));
     }
 
+    @Test
+    public void whenShortAcyclicSequenceThenFalse() {
+        assertThat(this.checker.hasCycle(second), is(false));
+    }
+
+    @Test
+    public void whenOneElementNullNextThenFalse() {
+        assertThat(this.checker.hasCycle(this.four), is(false));
+    }
+
 }
