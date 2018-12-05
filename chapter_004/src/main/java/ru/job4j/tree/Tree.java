@@ -119,7 +119,9 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
 
             @Override
             public E next() {
-                this.checkModCount();
+                if (!this.hasNext()) {
+                    throw new NoSuchElementException();
+                }
                 Node<E> element = this.data.remove();
                 for (Node<E> child : element.leaves()) {
                     this.data.offer(child);
