@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -70,6 +71,8 @@ public class TreeTest {
         assertThat(this.iterator.next(), is(6));
         assertThat(this.iterator.hasNext(), is(false));
         assertThat(this.iterator.hasNext(), is(false));
+        this.thrown.expect(NoSuchElementException.class);
+        this.iterator.next();
 
     }
 
