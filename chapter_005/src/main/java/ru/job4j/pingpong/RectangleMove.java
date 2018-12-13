@@ -14,7 +14,7 @@ public class RectangleMove implements Runnable {
     @Override
     public void run() {
         int dx = 1;
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             if (this.rect.getX() <= 0 || this.rect.getX() + this.rect.getWidth() >= this.limitX) {
                 dx = -dx;
             }
@@ -23,7 +23,7 @@ public class RectangleMove implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException ie) {
-                ie.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
