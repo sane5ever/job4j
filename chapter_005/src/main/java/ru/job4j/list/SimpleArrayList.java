@@ -51,6 +51,15 @@ public class SimpleArrayList<E> implements Iterable<E> {
     }
 
     /**
+     * Возвращает количество элементов, содержащихся в списке.
+     *
+     * @return кол-во эл-тов в списке
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
      * Добавляет заданный элемент в конец списка.
      *
      * @param value элемент для добавления
