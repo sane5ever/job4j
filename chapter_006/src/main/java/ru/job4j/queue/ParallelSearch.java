@@ -11,7 +11,7 @@ public class ParallelSearch {
     public static void main(String[] args) {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
         final Thread consumer = new Thread(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted() || !queue.isEmpty()) {
                 try {
                     System.out.println(queue.poll());
                 } catch (InterruptedException ie) {
@@ -32,16 +32,14 @@ public class ParallelSearch {
                 }
             }
             System.out.println("Producer is finishing.");
-
-            while (!queue.isEmpty()) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
-            }
             consumer.interrupt();
         });
         producer.start();
+        try {
+            producer.join();
+            consumer.join();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
     }
 }

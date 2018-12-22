@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Bounded Blocking Queue. Тестирование.
@@ -49,6 +49,8 @@ public class SimpleBlockingQueueTest {
         for (int i = 0; i < 10; i++) {
             queue.offer(0);
         }
+        assertFalse(queue.isEmpty());
+
         producer.start();
         Thread.sleep(10);
 
@@ -70,6 +72,7 @@ public class SimpleBlockingQueueTest {
         consumer.join();
 
         assertThat(number, is(0));
+        assertTrue(queue.isEmpty());
     }
 
 }
