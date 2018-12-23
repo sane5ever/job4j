@@ -171,8 +171,8 @@ public class UserStorage {
      * Пользователь.
      */
     static class User {
-        private int id;
         int amount;
+        private int id;
 
         public User(int id, int amount) {
             this.id = id;

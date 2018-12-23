@@ -83,6 +83,7 @@ public class SimpleBlockingQueue<E> {
 
     /**
      * Возвращает <tt>true</tt>, если в очереди отсутствуют элементы.
+     *
      * @return <tt>true</tt>, если в очереди отсутствуют элементы
      */
     public boolean isEmpty() {

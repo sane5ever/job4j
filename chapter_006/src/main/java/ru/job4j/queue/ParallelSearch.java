@@ -26,7 +26,7 @@ public class ParallelSearch {
             for (int i = 0; i < 3; i++) {
                 try {
                     queue.offer(i);
-                    Thread.sleep(500);
+                    Thread.sleep(50);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }

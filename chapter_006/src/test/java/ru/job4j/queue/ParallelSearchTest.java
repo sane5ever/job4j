@@ -16,7 +16,6 @@ import static org.junit.Assert.assertThat;
  * @since 2018-12-22
  */
 public class ParallelSearchTest {
-
     @Test
     public void test() throws InterruptedException {
         PrintStream original = System.out;
@@ -24,9 +23,7 @@ public class ParallelSearchTest {
         PrintStream mock = new PrintStream(buffer);
         System.setOut(mock);
 
-        Thread main = new Thread(() -> {
-            ParallelSearch.main(new String[0]);
-        });
+        Thread main = new Thread(() -> ParallelSearch.main(new String[0]));
         main.start();
         main.join();
         System.setOut(original);
@@ -38,7 +35,4 @@ public class ParallelSearchTest {
         assertThat(lines[3], is("Producer is finishing."));
         assertThat(lines[4], is("Consumer is finishing."));
     }
-
-
-
 }
