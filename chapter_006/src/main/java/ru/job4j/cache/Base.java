@@ -15,9 +15,4 @@ public class Base {
         this.id = id;
         this.version = 0;
     }
-
-    public Base(int id, int version) {
-        this.id = id;
-        this.version = version;
-    }
 }
