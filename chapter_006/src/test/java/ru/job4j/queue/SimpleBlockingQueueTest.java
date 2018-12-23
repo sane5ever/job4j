@@ -2,7 +2,10 @@ package ru.job4j.queue;
 
 import org.junit.Test;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -16,32 +19,38 @@ import static org.junit.Assert.*;
  */
 public class SimpleBlockingQueueTest {
     private final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
-    private int number = ThreadLocalRandom.current().nextInt(1000);
+    private final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
+    private final List<Integer> expected = List.of(0, 1, 2, 3, 4);
 
     private final Thread producer = new Thread(() -> {
-        try {
-            queue.offer(number);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        for (int i = 0; i < 5; i++) {
+            try {
+                queue.offer(i);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     });
 
     private final Thread consumer = new Thread(() -> {
-        try {
-            number -= queue.poll();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+            try {
+                buffer.add(queue.poll());
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
         }
     });
 
     @Test
     public void whenProducerOffersIntThenConsumerPollsSameOne() throws InterruptedException {
         producer.start();
-        producer.join();
         consumer.start();
+        producer.join();
+        consumer.interrupt();
         consumer.join();
 
-        assertThat(number, is(0));
+        assertThat(buffer, is(expected));
     }
 
     @Test
@@ -59,19 +68,22 @@ public class SimpleBlockingQueueTest {
         }
         consumer.start();
         producer.join();
+        consumer.interrupt();
         consumer.join();
 
-        assertThat(number, is(0));
+        assertThat(buffer, is(expected));
     }
 
     @Test
     public void whenConsumerMeetsEmptyQueueThenItWaits() throws InterruptedException {
         consumer.start();
         Thread.sleep(10);
-        queue.offer(this.number);
+        producer.start();
+        producer.join();
+        consumer.interrupt();
         consumer.join();
 
-        assertThat(number, is(0));
+        assertThat(buffer, is(expected));
         assertTrue(queue.isEmpty());
     }
 
