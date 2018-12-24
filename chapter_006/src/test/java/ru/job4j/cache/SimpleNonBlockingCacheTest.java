@@ -49,8 +49,8 @@ public class SimpleNonBlockingCacheTest {
         assertThat(references.size(), is(3));   // 0, 2, 4 — second time
         assertTrue(
                 references.stream()
-                        .map(ref -> ref.get().getClass().getSimpleName())
-                        .allMatch("OptimisticException"::equals)
+                        .map(ref -> ref.get().getClass())
+                        .allMatch(clazz -> clazz == OptimisticException.class)
         );
     }
 
