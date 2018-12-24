@@ -16,41 +16,43 @@ public class SimpleNonBlockingCache {
     private final ConcurrentHashMap<Integer, Base> data = new ConcurrentHashMap<>();
 
     /**
-     * Добавляет новую модель в кэш.
+     * Добавляет новую модель в кэш при отсутствии.
      *
      * @param model добавляемая модель
-     * @return <tt>true</tt>, если успешно
+     * @return текущая версия заданной модели (или {@code null}, если отсутствует)
      */
-    public boolean add(Base model) {
-        return data.putIfAbsent(model.id, model) == null;
+    public Base add(Base model) {
+        return data.putIfAbsent(model.getId(), model);
     }
 
     /**
-     * Заменяет в кэше заданную модель на свежую.
+     * Обновляет модель в кэше, используя данные из переданной.
      *
      * @param model заменяемая модель
-     * @return <tt>true</tt>, если успешно
+     * @return обновлённая модель (или {@code null}, если не обновлено)
+     * @throws OptimisticException если версии моделей не совпадают
      */
-    public boolean update(Base model) {
+    public Base update(Base model) {
         return data.computeIfPresent(
-                model.id,
+                model.getId(),
                 (k, v) -> {
-                    if (v.version != model.version) {
+                    if (v.getVersion() != model.getVersion()) {
                         throw new OptimisticException();
                     }
-                    model.version++;
-                    return model;
+                    v.setInfo(model.getInfo());
+                    v.updateVersion();
+                    return v;
                 }
-        ) != null;
+        );
     }
 
     /**
      * Удаляет заданную модель из кэша.
      *
      * @param model удаляемая модель
-     * @return <tt>true</tt>, если успешно
+     * @return удалённая модель (или {@code null}, если не найдена)
      */
-    public boolean delete(Base model) {
-        return data.remove(model.id) != null;
+    public Base delete(Base model) {
+        return data.remove(model.getId());
     }
 }

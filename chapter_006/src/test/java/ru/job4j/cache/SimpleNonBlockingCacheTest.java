@@ -3,9 +3,10 @@ package ru.job4j.cache;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.core.Is.is;
@@ -21,17 +22,17 @@ import static org.junit.Assert.assertTrue;
  */
 public class SimpleNonBlockingCacheTest {
     private final SimpleNonBlockingCache cache = new SimpleNonBlockingCache();
-
-    private final List<Boolean> buffer = new CopyOnWriteArrayList<>();
+    private final List<Base> buffer = new CopyOnWriteArrayList<>();
 
     @Test
-    public void whenUpdate() throws InterruptedException {
+    public void whenTwoThreadParallelUpdateSameModels() throws InterruptedException {
         IntStream.range(0, 5)
                 .filter(i -> i % 2 == 0)
-                .mapToObj(Base::new).forEach(cache::add);
+                .mapToObj(Base::new)
+                .forEach(cache::add);
         List<AtomicReference<Exception>> references = new CopyOnWriteArrayList<>();
         act(base -> {
-            boolean result = false;
+            Base result = null;
             try {
                 result = cache.update(base);
             } catch (Exception e) {
@@ -42,7 +43,7 @@ public class SimpleNonBlockingCacheTest {
 
         assertThat(buffer.size(), is(10));
         assertThat(
-                (int) buffer.stream().filter(v -> v).count(),
+                (int) buffer.stream().filter(Objects::nonNull).count(),
                 is(3)   // 0, 2, 4 — first time
         );
         assertThat(references.size(), is(3));   // 0, 2, 4 — second time
@@ -58,7 +59,7 @@ public class SimpleNonBlockingCacheTest {
         act(cache::add);
         assertThat(buffer.size(), is(10));
         assertThat(
-                (int) buffer.stream().filter(v -> v).count(),
+                (int) buffer.stream().filter(Objects::isNull).count(),
                 is(5)
         );
     }
@@ -69,18 +70,18 @@ public class SimpleNonBlockingCacheTest {
         act(cache::delete);
         assertThat(buffer.size(), is(10));
         assertThat(
-                (int) buffer.stream().filter(v -> v).count(),
+                (int) buffer.stream().filter(Objects::nonNull).count(),
                 is(5)
         );
     }
 
-    private void act(Predicate<Base> operation) throws InterruptedException {
-        Runnable runnable = () ->
+    private void act(Function<Base, Base> operation) throws InterruptedException {
+        Runnable task = () ->
                 IntStream.range(0, 5)
                         .mapToObj(Base::new)
-                        .forEach(base -> buffer.add(operation.test(base)));
-        Thread first = new Thread(runnable);
-        Thread second = new Thread(runnable);
+                        .forEach(base -> buffer.add(operation.apply(base)));
+        Thread first = new Thread(task);
+        Thread second = new Thread(task);
         first.start();
         second.start();
         first.join();
