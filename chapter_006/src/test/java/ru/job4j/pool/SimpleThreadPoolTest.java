@@ -26,9 +26,14 @@ public class SimpleThreadPoolTest {
     public ExpectedException thrown = ExpectedException.none();
 
     Set<Integer> result = new CopyOnWriteArraySet<>();
-    Set<Integer> expected = Set.of(0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361);
+    Set<Integer> expected = Set.of(
+            0, 1, 4, 9, 16,
+            25, 36, 49, 64, 81,
+            100, 121, 144, 169, 196,
+            225, 256, 289, 324, 361
+    );
     AtomicInteger count = new AtomicInteger(0);
-    
+
     Runnable task = () -> {
         int num = count.getAndIncrement();
         result.add(num * num);
@@ -63,7 +68,7 @@ public class SimpleThreadPoolTest {
         }
         shutdownThread.start();
         addThread.join();
-        assertNotEquals(result.size(), 100000);
+        assertNotEquals(result.size(), 10000);
     }
 
     @Test
