@@ -226,8 +226,8 @@ public class Board {
      * Класс, описывающий игровую ячейку поля.
      */
     public static class Cell {
-        public final int x;
-        public final int y;
+        private final int x;
+        private final int y;
 
         private final ReentrantLock lock;
 
