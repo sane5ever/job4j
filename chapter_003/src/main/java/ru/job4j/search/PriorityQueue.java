@@ -1,8 +1,6 @@
 package ru.job4j.search;
 
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 /**
  * Менеджер задач.
@@ -17,7 +15,7 @@ public class PriorityQueue {
      * @param task текущая задача
      */
     public void put(Task task) {
-        ListIterator<Task> iterator = this.tasks.listIterator();
+        var iterator = this.tasks.listIterator();
         while (iterator.hasNext()) {
             if (iterator.next().getPriority() > task.getPriority()) {
                 iterator.previous();

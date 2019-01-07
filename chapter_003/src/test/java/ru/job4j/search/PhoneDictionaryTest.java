@@ -3,8 +3,6 @@ package ru.job4j.search;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -23,25 +21,25 @@ public class PhoneDictionaryTest {
 
     @Test
     public void whenFindByName() {
-        List<Person> result = this.phones.find("Mick");
+        var result = this.phones.find("Mick");
         assertThat(result.iterator().next().getSurname(), is("Mouse"));
     }
 
     @Test
     public void whenFindByPhone() {
-        List<Person> result = this.phones.find("123");
+        var result = this.phones.find("123");
         assertThat(result.iterator().next().getSurname(), is("Mouse"));
     }
 
     @Test
     public void whenFindByAddress() {
-        List<Person> result = this.phones.find("Land");
+        var result = this.phones.find("Land");
         assertThat(result.iterator().next().getSurname(), is("Mouse"));
     }
 
     @Test
     public void whenDictionaryHasNotKey() {
-        List<Person> result = this.phones.find("TomCat");
+        var result = this.phones.find("TomCat");
         assertThat(result.iterator().hasNext(), is(false));
     }
 }

@@ -21,7 +21,7 @@ public class PriorityQueueTest {
 
     @Test
     public void whenHigherPriority() {
-        Task result = this.queue.take();
+        var result = this.queue.take();
         assertThat(result.getDesc(), is("urgent"));
     }
 
@@ -29,14 +29,14 @@ public class PriorityQueueTest {
     public void whenLowerPriority() {
         this.queue.take();
         this.queue.take();
-        Task result = this.queue.take();
+        var result = this.queue.take();
         assertThat(result.getDesc(), is("low"));
     }
 
     @Test
     public void whenDoubleMaxPriority() {
         this.queue.put(new Task("urgent too", 1));
-        Task result = this.queue.take();
+        var result = this.queue.take();
         assertThat(result.getDesc(), is("urgent"));
     }
 }
