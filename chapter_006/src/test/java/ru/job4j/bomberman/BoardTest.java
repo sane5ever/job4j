@@ -67,7 +67,7 @@ public class BoardTest {
             if (isGamerAllowed) {
                 board.addNewStep(Destination.values()[ThreadLocalRandom.current().nextInt(4)]);
             }
-            Thread.sleep(10);
+            Thread.sleep(speed / 3);
         }
 
         board.stop();
