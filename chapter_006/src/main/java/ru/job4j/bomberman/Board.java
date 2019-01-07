@@ -21,7 +21,7 @@ public class Board {
     /**
      * Продолжительность попытки занять новую ячейку по-умолчанию.
      */
-    private final static long TIMEOUT = 500;
+    private final static long DEFAULT_TIMEOUT = 500;
     /**
      * Продолжительность одного автоматического хода.
      */
@@ -43,6 +43,8 @@ public class Board {
      * Скорость совершения автоматического хода.
      */
     private final int speed;
+
+    private final long timeout;
     /**
      * Нить, эмулирующая поведение игрока.
      */
@@ -60,12 +62,17 @@ public class Board {
      * Сответствуют нажатию заданных кнопок на клавиатуре.
      */
     private BlockingQueue<Destination> playerMoves;
+    /**
+     * Статус состояния игры.
+     * Используется нитями игровых персонажей для проверки условия завершения рабочего цикла.
+     */
+    private volatile boolean isAlive;
 
     /**
      * Формирует новое игровое поле, представляющее квадратную матрицу размера по-умолчанию.
      */
     public Board() {
-        this(DEFAULT_LENGTH, DEFAULT_STEP_DURATION, DEFAULT_MONSTER_AMOUNT);
+        this(DEFAULT_LENGTH, DEFAULT_STEP_DURATION, DEFAULT_MONSTER_AMOUNT, DEFAULT_TIMEOUT);
     }
 
     /**
@@ -74,10 +81,12 @@ public class Board {
      * @param size  заданный размер
      * @param speed скорость совершения автоматического хода
      */
-    public Board(int size, int speed, int monsterAmount) {
+    public Board(int size, int speed, int monsterAmount, long timeout) {
         this.size = size;
         this.speed = speed;
+        this.timeout = timeout;
         this.board = new Cell[size][size];
+        this.isAlive = true;
         this.playerMoves = new LinkedBlockingQueue<>();
         this.player = new Player(this, "Player", playerMoves);
         this.monsters = IntStream.range(0, monsterAmount)
@@ -95,8 +104,17 @@ public class Board {
     }
 
     /**
-     * Основной метод для запуска игры.
+     * Возврашает статус состояния игры.
      *
+     * @return статус состояния игры
+     */
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    /**
+     * Основной метод для запуска игры.
+     * <p>
      * Запускает заполнение поля.
      * Устанавливает блокировку произвольных полей (кол-во зависит от размера поля).
      * Запускает нити игровых персонажей.
@@ -119,7 +137,7 @@ public class Board {
      * @param dest направление движения
      */
     public void addNewStep(Destination dest) {
-        playerMoves.offer(dest);
+        playerMoves.add(dest);
     }
 
     /**
@@ -136,8 +154,9 @@ public class Board {
      * Необходимо вызывать при завершении игры.
      */
     public void stop() {
-        player.interrupt();
-        monsters.forEach(Thread::interrupt);
+        synchronized (this) {
+            isAlive = false;
+        }
     }
 
     /**
@@ -152,10 +171,10 @@ public class Board {
      * @return <tt>true</tt>, если ход возможен и совершён
      */
     public boolean move(Cell source, Cell dist) throws InterruptedException {
-        boolean isLock = false;
+        var isLock = false;
         if (dist != null) {
-            ReentrantLock next = board[dist.x][dist.y].lock;
-            isLock = next.tryLock() || next.tryLock(TIMEOUT, TimeUnit.MILLISECONDS);
+            var next = board[dist.x][dist.y].lock;
+            isLock = next.tryLock() || next.tryLock(timeout, TimeUnit.MILLISECONDS);
             if (isLock) {
                 board[source.x][source.y].lock.unlock();
             }
@@ -173,7 +192,7 @@ public class Board {
     public Cell getRandomNextCell(Cell current) {
         Cell result;
         do {
-            Destination dest = Destination.values()
+            var dest = Destination.values()
                     [ThreadLocalRandom.current().nextInt(Destination.values().length)];
             result = getNextCell(current, dest);
         } while (result == null);
@@ -189,8 +208,8 @@ public class Board {
      * @return соседняя ячейка поля в заданном направлении, либо <tt>null</tt> при её отсутствии
      */
     public Cell getNextCell(Cell current, Destination dest) {
-        int x = current.x + dest.dx;
-        int y = current.y + dest.dy;
+        var x = current.x + dest.dx;
+        var y = current.y + dest.dy;
         return !isOutOfBoard(x, y) ? board[x][y] : null;
     }
 
@@ -214,12 +233,31 @@ public class Board {
     public Cell getStartPosition() {
         Cell result;
         do {
-            int i = ThreadLocalRandom.current().nextInt(size);
-            int j = ThreadLocalRandom.current().nextInt(size);
+            var i = ThreadLocalRandom.current().nextInt(size);
+            var j = ThreadLocalRandom.current().nextInt(size);
             result = board[i][j];
         } while (result.lock.isLocked());
         result.lock.lock();
         return result;
+    }
+
+    /**
+     * Используется нитями игровых персонажей для проверки возможности продолжения игры.
+     * Нить игрока проверяет была ли попытка захвата текущего лока.
+     * Другие (нити монстров) — была ли попытка захвата текущего лока нитью игрока.
+     * И та, и другая ситуация означает, что игра должна быть завершена.
+     *
+     * @param cell занимаемая клетка поля
+     */
+    public void checkIntersect(Cell cell) {
+        var isIntersect = Thread.currentThread() == player
+                ? cell.lock.hasQueuedThreads()
+                : cell.lock.hasQueuedThread(player);
+        if (isIntersect && isAlive) {
+            synchronized (this) {
+                isAlive = false;
+            }
+        }
     }
 
     /**

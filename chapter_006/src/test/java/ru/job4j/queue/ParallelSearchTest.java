@@ -3,6 +3,7 @@ package ru.job4j.queue;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static org.hamcrest.core.Is.is;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertThat;
  */
 public class ParallelSearchTest {
     @Test
-    public void test() throws InterruptedException {
+    public void test() throws InterruptedException, IOException {
         PrintStream original = System.out;
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         PrintStream mock = new PrintStream(buffer);

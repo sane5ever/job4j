@@ -19,10 +19,29 @@ import static org.junit.Assert.assertThat;
  * @since 2018-12-27
  */
 public class BoardTest {
+    @Test
+    public void mainTest() throws InterruptedException {
+        execute(3, 5, 1, true, 5);
+    }
 
-    private void execute(int size, int mosterAmount, boolean isGamerAllowed, int falseCounter) throws InterruptedException {
+    @Test
+    public void whenNoEmptyCellsThenResultOnlyFalse() throws InterruptedException {
+        execute(2, 6, 4, false, 2);
+    }
+
+    @Test   // for 100% test coverage only
+    public void initTest() {
+        Board board = new Board();
+        board.start();
+        board.stop();
+        assertThat(board.getSpeed(), is(1000));
+    }
+
+    private void execute(
+            int size, int speed, int monsterAmount, boolean isGamerAllowed, int falseCounter
+    ) throws InterruptedException {
         Map<Boolean, Integer> map = new ConcurrentHashMap<>();
-        Board board = new Board(size, 5, mosterAmount) {
+        Board board = new Board(size, speed, monsterAmount, speed / 2) {
             @Override
             public boolean move(Cell source, Cell dist) throws InterruptedException {
                 boolean result = super.move(source, dist);
@@ -30,7 +49,6 @@ public class BoardTest {
                         result,
                         (k, v) -> v == null ? 0 : ++v
                 );
-
                 return result;
             }
         };
@@ -38,9 +56,13 @@ public class BoardTest {
         board.start();
 
         while (
-                !map.containsKey(false)
-                        || map.get(false) < falseCounter
-                        || (isGamerAllowed && !map.containsKey(true))   // map must collect true if only mainTest() execute
+                board.isAlive()
+                        && (
+                        !map.containsKey(false)
+                                || map.get(false) < falseCounter
+                                || (isGamerAllowed && !map.containsKey(true))   // map must collect true if only mainTest() execute
+                )
+
         ) {
             if (isGamerAllowed) {
                 board.addNewStep(Destination.values()[ThreadLocalRandom.current().nextInt(4)]);
@@ -51,31 +73,13 @@ public class BoardTest {
         board.stop();
 
         long duration = System.currentTimeMillis() - begin;
-        int delta = 100; //погрешность
+        long delta = 50L; //погрешность
 
         assertThat(
                 duration,
-                lessThan(delta + 500L * map.get(false) + 5L * map.getOrDefault(true, 0))
+                lessThan(delta + speed / 2 * map.get(false) + speed * map.getOrDefault(true, 0))
         );
         assertFalse(!isGamerAllowed && map.containsKey(true));
     }
 
-
-    @Test
-    public void mainTest() throws InterruptedException {
-        execute(3, 1, true, 5);
-    }
-
-    @Test
-    public void whenNoEmptyCellsThenResultOnlyFalse() throws InterruptedException {
-        execute(2, 4, false, 2);
-    }
-
-    @Test   // for 100% test coverage only
-    public void initTest() {
-        Board board = new Board();
-        board.start();
-        board.stop();
-        assertThat(board.getSpeed(), is(1000));
-    }
 }

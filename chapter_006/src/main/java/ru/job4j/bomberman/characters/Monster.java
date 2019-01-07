@@ -19,6 +19,7 @@ public class Monster extends GameCharacter {
      */
     public Monster(Board board, String name) {
         super(board, name);
+        this.setDaemon(true);
     }
 
     /**

@@ -20,7 +20,7 @@ public abstract class GameCharacter extends Thread {
      * Связывает его с заданным игровым полем.
      *
      * @param board игровое поле
-     * @param name имя нити (для удобства отладки)
+     * @param name  имя нити (для удобства отладки)
      */
     public GameCharacter(Board board, String name) {
         super(name);
@@ -32,8 +32,11 @@ public abstract class GameCharacter extends Thread {
      */
     @Override
     public void run() {
-        Board.Cell position = board.getStartPosition();
-        while (!Thread.currentThread().isInterrupted()) {
+        for (
+                Board.Cell position = board.getStartPosition();
+                board.isAlive();
+                board.checkIntersect(position)
+        ) {
             try {
                 position = singleMove(position);
             } catch (InterruptedException ie) {
@@ -45,7 +48,7 @@ public abstract class GameCharacter extends Thread {
     /**
      * Метод для реализации подклассами.
      * Должен описывать логику совершения одиночного хода игрового персонажа.
-     *
+     * <p>
      * Возвращает ячейку, на кот. переместился игровой персонаж в процессе хода.
      * Используется для обновления текущей позиции персонажа в методе {@link #run()}.
      *
