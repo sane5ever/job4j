@@ -8,7 +8,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -20,17 +19,26 @@ import static org.junit.Assert.assertThat;
  */
 public class BoardTest {
     @Test
-    public void mainTest() throws InterruptedException {
-        execute(10, 40, 10, true, 5);
-        execute(2, 40, 2, true, 5);
+    public void mainTest() {
+        execute(10, 50, 20, true, 10);
     }
 
     @Test
-    public void whenNoEmptyCellsThenResultOnlyFalse() throws InterruptedException {
-        execute(3, 20, 8, false, 2);
+    public void additionalTest() {
+        execute(10, 10, 50, false, 100);
     }
 
-    @Test   // for 100% test coverage only
+    @Test
+    public void testWhen1x1Matrix() {
+        execute(1, 10, 0, true, 10);
+    }
+
+    @Test
+    public void testWhenNoEmptyCells() {
+        execute(3, 20, 7, false, 10);
+    }
+
+    @Test
     public void initTest() {
         Board board = new Board();
         board.start();
@@ -40,12 +48,12 @@ public class BoardTest {
 
     private void execute(
             int size, int speed, int monsterAmount, boolean isGamerAllowed, int falseCounter
-    ) throws InterruptedException {
+    ) {
         Map<Boolean, Integer> map = new ConcurrentHashMap<>();
         Board board = new Board(size, speed, monsterAmount, speed / 2) {
             @Override
-            public boolean move(Cell source, Cell dist) throws InterruptedException {
-                var result = super.move(source, dist);
+            public boolean move(Cell source, Cell dest) throws InterruptedException {
+                var result = super.move(source, dest);
                 map.compute(
                         result,
                         (k, v) -> v == null ? 0 : ++v
@@ -53,33 +61,49 @@ public class BoardTest {
                 return result;
             }
         };
-        var begin = System.currentTimeMillis();
-        board.start();
 
-        while (
-                 (
-                        !map.containsKey(false)
-                                || map.get(false) < falseCounter
-                                || (isGamerAllowed && !map.containsKey(true))   // map must collect true if only mainTest() execute
-                )
-
-        ) {
-            if (isGamerAllowed) {
-                board.addNewStep(Destination.values()[ThreadLocalRandom.current().nextInt(4)]);
+        Thread mockViewThread = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (isGamerAllowed) {
+                    board.addNewStep(
+                            Destination.values()[ThreadLocalRandom.current().nextInt(4)]
+                    );
+                }
+                try {
+                    Thread.sleep(speed / 3);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
-            Thread.sleep(speed / 3);
-        }
+        });
+        var begin = System.currentTimeMillis();
+        mockViewThread.start();
 
-        board.stop();
+        Thread controllerThread = new Thread(board::start);
+        controllerThread.start();
+
+        //board.start();
+
+        while (board.isAlive()) {
+            if (
+                    map.containsKey(false)
+                            && map.get(false) >= falseCounter
+                            && (!isGamerAllowed || map.containsKey(true) || size == 1)
+            ) {
+                controllerThread.interrupt();
+                mockViewThread.interrupt();
+                break;
+            }
+
+        }
 
         var duration = System.currentTimeMillis() - begin;
         var delta = 50L; //погрешность
 
         assertThat(
                 duration,
-                lessThan(delta + speed / 2 * map.get(false) + speed * map.getOrDefault(true, 0))
+                lessThan(delta + speed / 2 * map.getOrDefault(false, 0) + speed * map.getOrDefault(true, 0))
         );
-        assertFalse(!isGamerAllowed && map.containsKey(true));
     }
 
 }

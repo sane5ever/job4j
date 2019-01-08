@@ -35,6 +35,7 @@ public class Player extends GameCharacter {
     /**
      * Описывает логику совершения одиночного хода игроком.
      * Направление движения забирается из установленной блокирующей очереди.
+     * Если ход не совершён — возврашается текущая позиция.
      *
      * @param position текущая позиция
      * @return позиция, на кот. совершён ход
@@ -42,11 +43,8 @@ public class Player extends GameCharacter {
      */
     @Override
     Board.Cell singleMove(Board.Cell position) throws InterruptedException {
-        Board.Cell fresh;
-        do {
-            Destination dest = moveQueue.take();
-            fresh = board.getNextCell(position, dest);
-        } while (!board.move(position, fresh));
-        return fresh;
+        Destination dest = moveQueue.take();
+        Board.Cell fresh = board.getNextCell(position, dest);
+        return board.move(position, fresh) ? fresh : position;
     }
 }

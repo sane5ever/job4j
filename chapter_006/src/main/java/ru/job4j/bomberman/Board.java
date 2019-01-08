@@ -1,5 +1,6 @@
 package ru.job4j.bomberman;
 
+import javafx.scene.control.Cell;
 import ru.job4j.bomberman.characters.GameCharacter;
 import ru.job4j.bomberman.characters.Monster;
 import ru.job4j.bomberman.characters.Player;
@@ -137,7 +138,7 @@ public class Board {
      * @param dest направление движения
      */
     public void addNewStep(Destination dest) {
-        playerMoves.add(dest);
+        playerMoves.offer(dest);
     }
 
     /**
@@ -167,19 +168,18 @@ public class Board {
      * Используется потоками игровых персонажей при работе.
      *
      * @param source текущее поле
-     * @param dist   следующее поле
+     * @param dest   следующее поле
      * @return <tt>true</tt>, если ход возможен и совершён
      */
-    public boolean move(Cell source, Cell dist) throws InterruptedException {
+    public boolean move(Cell source, Cell dest) throws InterruptedException {
         var isLock = false;
-        if (dist != null) {
-            var next = board[dist.x][dist.y].lock;
-            isLock = next.tryLock() || next.tryLock(timeout, TimeUnit.MILLISECONDS);
-            if (isLock) {
-                board[source.x][source.y].lock.unlock();
-            }
+        var next = board[dest.x][dest.y].lock;
+        isLock = next.tryLock() || next.tryLock(timeout, TimeUnit.MILLISECONDS);
+        if (isLock) {
+            checkIntersect(source);
+            board[source.x][source.y].lock.unlock();
         }
-        return isLock;
+        return isLock && source != dest;
     }
 
     /**
@@ -195,22 +195,22 @@ public class Board {
             var dest = Destination.values()
                     [ThreadLocalRandom.current().nextInt(Destination.values().length)];
             result = getNextCell(current, dest);
-        } while (result == null);
+        } while (result == current);
         return result;
     }
 
     /**
      * Возвращает ячейку, соседнюю с заданной по заданному направлению.
-     * При выходе за границы поля возращается <tt>null</tt>.
+     * При выходе за границы поля возращается текущая позиция.
      *
      * @param current ячейка, с кот. совершается ход
      * @param dest    направление движения
-     * @return соседняя ячейка поля в заданном направлении, либо <tt>null</tt> при её отсутствии
+     * @return ячейка для совершения хода
      */
     public Cell getNextCell(Cell current, Destination dest) {
         var x = current.x + dest.dx;
         var y = current.y + dest.dy;
-        return !isOutOfBoard(x, y) ? board[x][y] : null;
+        return !isOutOfBoard(x, y) ? board[x][y] : current;
     }
 
     /**
@@ -264,8 +264,8 @@ public class Board {
      * Класс, описывающий игровую ячейку поля.
      */
     public static class Cell {
-        private final int x;
-        private final int y;
+        public final int x;
+        public final int y;
 
         private final ReentrantLock lock;
 
