@@ -253,7 +253,7 @@ public class Board {
         var isIntersect = Thread.currentThread() == player
                 ? cell.lock.hasQueuedThreads()
                 : cell.lock.hasQueuedThread(player);
-        if (isIntersect && isAlive) {
+        if (isIntersect) {
             synchronized (this) {
                 isAlive = false;
             }

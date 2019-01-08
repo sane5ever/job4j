@@ -21,12 +21,13 @@ import static org.junit.Assert.assertThat;
 public class BoardTest {
     @Test
     public void mainTest() throws InterruptedException {
-        execute(3, 5, 1, true, 5);
+        execute(10, 40, 10, true, 5);
+        execute(2, 40, 2, true, 5);
     }
 
     @Test
     public void whenNoEmptyCellsThenResultOnlyFalse() throws InterruptedException {
-        execute(2, 6, 4, false, 2);
+        execute(3, 20, 8, false, 2);
     }
 
     @Test   // for 100% test coverage only
@@ -44,7 +45,7 @@ public class BoardTest {
         Board board = new Board(size, speed, monsterAmount, speed / 2) {
             @Override
             public boolean move(Cell source, Cell dist) throws InterruptedException {
-                boolean result = super.move(source, dist);
+                var result = super.move(source, dist);
                 map.compute(
                         result,
                         (k, v) -> v == null ? 0 : ++v
@@ -52,12 +53,11 @@ public class BoardTest {
                 return result;
             }
         };
-        long begin = System.currentTimeMillis();
+        var begin = System.currentTimeMillis();
         board.start();
 
         while (
-                board.isAlive()
-                        && (
+                 (
                         !map.containsKey(false)
                                 || map.get(false) < falseCounter
                                 || (isGamerAllowed && !map.containsKey(true))   // map must collect true if only mainTest() execute
@@ -72,8 +72,8 @@ public class BoardTest {
 
         board.stop();
 
-        long duration = System.currentTimeMillis() - begin;
-        long delta = 50L; //погрешность
+        var duration = System.currentTimeMillis() - begin;
+        var delta = 50L; //погрешность
 
         assertThat(
                 duration,
