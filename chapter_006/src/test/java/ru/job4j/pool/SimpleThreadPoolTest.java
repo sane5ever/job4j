@@ -45,7 +45,7 @@ public class SimpleThreadPoolTest {
         for (int i = 0; i < 20; i++) {
             pool.work(task);
         }
-        while (result.size() != 20) {
+        while (result.size() < 20) {
             Thread.sleep(1);
         }
         assertThat(result, is(expected));
@@ -58,7 +58,8 @@ public class SimpleThreadPoolTest {
                         IntStream.range(0, 10000).forEach(i -> {
                             try {
                                 pool.work(task);
-                            } catch (Exception ignore) {
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
                             }
                         }));
         Thread shutdownThread = new Thread(() -> pool.shutdown());
