@@ -58,7 +58,7 @@ public class SimpleThreadPoolTest {
                         IntStream.range(0, 10000).forEach(i -> {
                             try {
                                 pool.work(task);
-                            } catch (InterruptedException ie) {
+                            } catch (InterruptedException|RejectedExecutionException e) {
                                 Thread.currentThread().interrupt();
                             }
                         }));

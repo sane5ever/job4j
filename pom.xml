@@ -20,6 +20,8 @@
         <module>chapter_004</module>
         <module>chapter_005</module>
         <module>chapter_006</module>
+        <module>chapter_007</module>
+        <module>chapter_008</module>
     </modules>
 	
     <build>
@@ -128,6 +130,21 @@
             <artifactId>jcip-annotations</artifactId>
             <version>1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+
 
     </dependencies>
 
