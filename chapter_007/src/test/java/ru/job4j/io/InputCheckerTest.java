@@ -78,6 +78,19 @@ public class InputCheckerTest {
         );
     }
 
+    @Test
+    public void whenIOExceptionThrown() {
+        try (InputStream in = new InputStream() {
+            @Override
+            public int read() throws IOException {
+                throw new IOException();
+            }
+        }) {
+            assertFalse(checker.isEvenNumber(in));
+        } catch (IOException ignore) {
+        }
+    }
+
     private boolean execute(String number) {
         boolean result = false;
         try (InputStream in = new ByteArrayInputStream(number.getBytes())) {
