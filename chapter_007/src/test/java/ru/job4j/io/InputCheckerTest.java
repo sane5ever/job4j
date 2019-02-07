@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  * @since 2019-02-07
  */
 public class InputCheckerTest {
-    private static final Logger log = LogManager.getLogger(InputCheckerTest.class);
+    private static final Logger LOG = LogManager.getLogger(InputCheckerTest.class);
     private final InputChecker checker = new InputChecker();
 
     @Test
@@ -80,10 +80,10 @@ public class InputCheckerTest {
 
     private boolean execute(String number) {
         boolean result = false;
-        try (InputStream in = new ByteArrayInputStream(number.getBytes())){
+        try (InputStream in = new ByteArrayInputStream(number.getBytes())) {
             result = checker.isEvenNumber(in);
         } catch (IOException ioe) {
-            log.error(ioe.getMessage(), ioe);
+            LOG.error(ioe.getMessage(), ioe);
         }
         return result;
     }

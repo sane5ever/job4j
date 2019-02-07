@@ -14,7 +14,7 @@ import java.io.InputStream;
  * @since 2019-02-07
  */
 public class InputChecker {
-    private static final Logger log = LogManager.getLogger(InputChecker.class);
+    private static final Logger LOG = LogManager.getLogger(InputChecker.class);
 
     /**
      * Метод проверяет, что в байтовом потоке записано чётное число
@@ -34,7 +34,7 @@ public class InputChecker {
                 lastByte = b;
             }
         } catch (IOException ioe) {
-            log.error(ioe.getMessage(), ioe);
+            LOG.error(ioe.getMessage(), ioe);
         }
         return isDigitSequence && lastByte % 2 == 0;
     }
