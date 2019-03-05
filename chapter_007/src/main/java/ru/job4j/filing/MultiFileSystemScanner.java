@@ -22,7 +22,7 @@ public class MultiFileSystemScanner extends FileSystemScanner {
     /**
      * Исполнитель потоков для валидации элементов в файловой системе
      */
-    private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private ExecutorService executor;
 
     @Override
     void addIfValid(List<File> result, File file, List<String> exts) {
@@ -48,11 +48,13 @@ public class MultiFileSystemScanner extends FileSystemScanner {
 
     /**
      * В многопоточной реализации необходимо потокобезопасное хранилище результатов.
+     * Так же инициализирует новый исполнитель потоков для обработки фильтрации файлов.
      *
      * @return {@link CopyOnWriteArrayList} потокобезопасная реализация листа
      */
     @Override
-    List<File> getEmptyList() {
+    List<File> initStorage() {
+        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         return new CopyOnWriteArrayList<>();
     }
 }

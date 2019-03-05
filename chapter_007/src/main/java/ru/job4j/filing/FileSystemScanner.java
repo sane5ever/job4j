@@ -23,7 +23,7 @@ public class FileSystemScanner {
      * @return список файлов, найденный в заданном каталоге
      */
     List<File> files(String parent, List<String> exts) {
-        List<File> result = getEmptyList();
+        List<File> result = initStorage();
         File directory = new File(parent);
         Queue<File> order = new LinkedList<>();
         order.offer(directory);
@@ -86,9 +86,9 @@ public class FileSystemScanner {
      * В реализациях класса могут быть использованы разные структуры для сохранения результатов поиска.
      * Стандартная реализация — {@link ArrayList}
      *
-     * @return
+     * @return хранилище для списка файлов
      */
-    List<File> getEmptyList() {
+    List<File> initStorage() {
         return new ArrayList<>();
     }
 }
