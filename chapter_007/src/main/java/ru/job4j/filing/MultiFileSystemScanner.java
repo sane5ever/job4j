@@ -46,7 +46,6 @@ public class MultiFileSystemScanner {
                                 for (String extension : exts) {
                                     if (extension.equals(ext)) {
                                         result.add(file);
-                                        System.out.println(file.getPath());
                                         break;
                                     }
                                 }

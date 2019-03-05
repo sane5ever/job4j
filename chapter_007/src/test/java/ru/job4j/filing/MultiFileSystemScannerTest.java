@@ -59,12 +59,6 @@ public class MultiFileSystemScannerTest {
         expected.add(second);
         MultiFileSystemScanner search = new MultiFileSystemScanner();
         List<File> result = search.files(path, exts);
-        for (File file : result) {
-            System.out.println("result: " + file.getPath());
-        }
-        for (File file : expected) {
-            System.out.println("expected: " + file.getPath());
-        }
         assertTrue(result.size() == expected.size());
         assertTrue(result.containsAll(expected));
     }
