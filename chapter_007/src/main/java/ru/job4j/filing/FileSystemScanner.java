@@ -6,6 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Однопоточная реализация поисковика файлов в каталогах.
+ *
+ * @author Alexander Savchenko
+ * @version 1.0
+ * @since 2019-03-05
+ */
 public class FileSystemScanner {
     /**
      * Возвращает список файлов, найденных в заданном каталоге,
@@ -16,7 +23,7 @@ public class FileSystemScanner {
      * @return список файлов, найденный в заданном каталоге
      */
     List<File> files(String parent, List<String> exts) {
-        List<File> result = new ArrayList<>();
+        List<File> result = getEmptyList();
         File directory = new File(parent);
         Queue<File> order = new LinkedList<>();
         order.offer(directory);
@@ -28,7 +35,7 @@ public class FileSystemScanner {
                 addIfValid(result, file, exts);
             }
         }
-        return result;
+        return checkResult(result);
     }
 
     /**
@@ -52,12 +59,36 @@ public class FileSystemScanner {
      * @param file   заданный файл
      * @param exts   список расширений
      */
-    private void addIfValid(List<File> result, File file, List<String> exts) {
+
+    void addIfValid(List<File> result, File file, List<String> exts) {
         String fileName = file.getName();
         int i = fileName.lastIndexOf('.');
         String fileExt = i > 0 ? fileName.substring(i + 1) : null;
         if (fileExt != null && exts.contains(fileExt)) {
             result.add(file);
         }
+    }
+
+    /**
+     * В реализациях класса могут понадобиться дополнительные мероприятия
+     * перед возвратом результата работы основного метода.
+     * <p>
+     * Данная реализация является заглушкой для тех реализаций, где результат сразу готов к возврату.
+     *
+     * @param result результирующий список файлов
+     * @return результат, кот. должен вернуть основной метод
+     */
+    List<File> checkResult(List<File> result) {
+        return result;
+    }
+
+    /**
+     * В реализациях класса могут быть использованы разные структуры для сохранения результатов поиска.
+     * Стандартная реализация — {@link ArrayList}
+     *
+     * @return
+     */
+    List<File> getEmptyList() {
+        return new ArrayList<>();
     }
 }

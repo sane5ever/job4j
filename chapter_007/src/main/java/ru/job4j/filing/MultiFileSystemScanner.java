@@ -1,58 +1,58 @@
 package ru.job4j.filing;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class MultiFileSystemScanner {
-    private List<File> result = new CopyOnWriteArrayList<>();
-    private Queue<File> queue = new LinkedList<>();
-    private int threads = Runtime.getRuntime().availableProcessors();
-    private ExecutorService executor = Executors.newFixedThreadPool(threads);
-    private Semaphore semaphore = new Semaphore(threads);
+import java.io.File;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Многопоточная реализация сканера файловой системы.
+ *
+ * @author Alexander Savchenko
+ * @version 1.0
+ * @since 2019-03-05
+ */
+public class MultiFileSystemScanner extends FileSystemScanner {
+    private static final Logger LOG = LogManager.getLogger(MultiFileSystemScanner.class);
+    /**
+     * Исполнитель потоков для валидации элементов в файловой системе
+     */
+    private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+    @Override
+    void addIfValid(List<File> result, File file, List<String> exts) {
+        executor.execute(() -> super.addIfValid(result, file, exts));
+    }
 
     /**
-     * Метод для получения списка всех файлов с заданным расширением по указанному пути.
-     * Поиск производится в многопоточном режиме.
-     * Все внутренние каталоги обходятся в ширину.
+     * Перед возвратом результата из основного метода необходимо дождаться завершения работы тредпула {@link #executor}
      *
-     * @param parent путь, в котором ищутся файлы.
-     * @param exts   список расширений файлов, которые надо найти.
-     * @return список найденных файлов.
+     * @param result результирующий список файлов
+     * @return результат, кот. должен вернуть основной метод
      */
-    public List<File> files(String parent, List<String> exts) {
-        File root = new File(parent);
-        queue.offer(root);
-        while (!queue.isEmpty()) {
-            File nextFileEntry = queue.poll();
-            if (nextFileEntry.isDirectory()) {
-                for (File file : nextFileEntry.listFiles()) {
-                    queue.offer(file);
-                }
-            } else {
-                executor.submit(
-                        () -> {
-                            File file = nextFileEntry;
-                            String fileName = file.getName();
-                            int index = fileName.lastIndexOf(".") == -1 ? 0 : fileName.lastIndexOf(".");
-                            String ext = fileName.substring(index);
-                            for (String extension : exts) {
-                                if (extension.equals(ext)) {
-                                    result.add(file);
-                                    break;
-                                }
-                            }
-                        });
-            }
-        }
+    @Override
+    List<File> checkResult(List<File> result) {
         executor.shutdown();
         try {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("interrupted exception via awaiting thread pool termination", e);
         }
         return result;
+    }
+
+    /**
+     * В многопоточной реализации необходимо потокобезопасное хранилище результатов.
+     *
+     * @return {@link CopyOnWriteArrayList} потокобезопасная реализация листа
+     */
+    @Override
+    List<File> getEmptyList() {
+        return new CopyOnWriteArrayList<>();
     }
 }
