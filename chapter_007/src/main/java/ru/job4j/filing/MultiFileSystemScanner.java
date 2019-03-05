@@ -4,10 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 
 public class MultiFileSystemScanner {
     private List<File> result = new CopyOnWriteArrayList<>();
@@ -37,31 +34,22 @@ public class MultiFileSystemScanner {
             } else {
                 executor.submit(
                         () -> {
-                            try {
-                                semaphore.acquire();
-                                File file = nextFileEntry;
-                                String fileName = file.getName();
-                                int index = fileName.lastIndexOf(".") == -1 ? 0 : fileName.lastIndexOf(".");
-                                String ext = fileName.substring(index);
-                                for (String extension : exts) {
-                                    if (extension.equals(ext)) {
-                                        result.add(file);
-                                        break;
-                                    }
+                            File file = nextFileEntry;
+                            String fileName = file.getName();
+                            int index = fileName.lastIndexOf(".") == -1 ? 0 : fileName.lastIndexOf(".");
+                            String ext = fileName.substring(index);
+                            for (String extension : exts) {
+                                if (extension.equals(ext)) {
+                                    result.add(file);
+                                    break;
                                 }
-                                semaphore.release();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
                             }
                         });
             }
         }
+        executor.shutdown();
         try {
-            if (semaphore.availablePermits() == threads) {
-                executor.shutdown();
-            } else {
-                Thread.sleep(100);
-            }
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
