@@ -1,8 +1,8 @@
 package ru.job4j.io;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
  * @since 2019-02-08
  */
 public class DropAbusesInputCheckerTest {
-    private static final Logger LOG = LogManager.getLogger(DropAbusesInputCheckerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DropAbusesInputCheckerTest.class);
     private static final String[] ABUSES = new String[]{
             "damn",
             "hell",

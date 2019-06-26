@@ -1,7 +1,8 @@
 package ru.job4j.io;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  * @since 2019-02-07
  */
 public class InputChecker {
-    private static final Logger LOG = LogManager.getLogger(InputChecker.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InputChecker.class);
 
     private boolean firstLine;
     private Pattern regex;

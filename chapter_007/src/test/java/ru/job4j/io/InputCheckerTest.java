@@ -1,8 +1,8 @@
 package ru.job4j.io;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  * @since 2019-02-07
  */
 public class InputCheckerTest {
-    private static final Logger LOG = LogManager.getLogger(InputCheckerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InputCheckerTest.class);
     private final InputChecker checker = new InputChecker();
 
     @Test
