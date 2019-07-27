@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import com.google.common.base.Objects;
+
 import java.util.Date;
 
 /**
@@ -47,6 +49,30 @@ public class Item {
 
     public void setCreate(long create) {
         this.create = create;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Item item = (Item) o;
+        return create == item.create
+                && Objects.equal(id, item.id)
+                && Objects.equal(name, item.name)
+                && Objects.equal(description, item.description);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (int) (create ^ (create >>> 32));
+        return result;
     }
 
     @Override

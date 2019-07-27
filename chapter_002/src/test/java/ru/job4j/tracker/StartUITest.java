@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
 public class StartUITest {
     @Test
     public void whenEmpty() {
-        Tracker tracker = new Tracker();
+        ITracker tracker = new Tracker();
         Input input = new StubInput(new String[]{"1", "6", "y"});
         new StartUI(input, tracker).init();
         assertThat(tracker.findAll().isEmpty(), is(true));
@@ -23,7 +23,7 @@ public class StartUITest {
 
     @Test
     public void whenUserAddItemThenTrackerHasNewItemWithSameName() {
-        Tracker tracker = new Tracker();
+        ITracker tracker = new Tracker();
         Input input = new StubInput(new String[]{"0", "test name", "test desc", "6", "y"});
         new StartUI(input, tracker).init();
         assertThat(tracker.findAll().get(0).getName(), is("test name"));
@@ -31,7 +31,7 @@ public class StartUITest {
 
     @Test
     public void whenUpdateThenTrackerHasUpdatedValue() {
-        Tracker tracker = new Tracker();
+        ITracker tracker = new Tracker();
         Item item = new Item("name", "test");
         tracker.add(item);
         Input input = new StubInput(new String[]{"2", item.getId(), "fresh name", "update", "6", "y"});
@@ -41,7 +41,7 @@ public class StartUITest {
 
     @Test
     public void whenDeleteOnlyItemThenTrackerHasNoItem() {
-        Tracker tracker = new Tracker();
+        ITracker tracker = new Tracker();
         Item item = new Item("name", "test");
         tracker.add(item);
         Input input = new StubInput(new String[]{"3", item.getId(), "6", "y"});
@@ -51,7 +51,7 @@ public class StartUITest {
 
     @Test
     public void whenTryToUpdateNonexistentItemThenTrackerHasNoChange() {
-        Tracker tracker = new Tracker();
+        ITracker tracker = new Tracker();
         Input input = new StubInput(new String[]{"2", "123", "fresh", "update", "6", "y"});
         new StartUI(input, tracker).init();
         assertThat(tracker.findAll().size(), is(0));
@@ -59,7 +59,7 @@ public class StartUITest {
 
     @Test
     public void whenTryToDeleteNonexistentItemThenTrackerHasNoChange() {
-        Tracker tracker = new Tracker();
+        ITracker tracker = new Tracker();
         Item item = new Item("name", "desc");
         tracker.add(item);
         Input input = new StubInput(new String[]{"3", "123", "6", "y"});

@@ -16,7 +16,21 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
+            <version>42.2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.job4j</groupId>
+            <artifactId>chapter_002</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- http://stackoverflow.com/a/25322753/548473 -->
+        <dependency>
+            <groupId>ru.job4j</groupId>
+            <artifactId>chapter_002</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
