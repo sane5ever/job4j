@@ -12,9 +12,9 @@ enum Arg {
     e("exclude", false),
     o("output", true);
 
-    private String description;
+    private final String description;
 
-    private boolean required;
+    private final boolean required;
 
     Arg(String description, boolean required) {
         this.description = description;

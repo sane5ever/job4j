@@ -17,9 +17,9 @@ import java.util.zip.ZipOutputStream;
  * @since 2019-06-27
  */
 public class ZipManager {
-    private Path zipFile;
-    private Path root;
-    private List<File> files;
+    private final Path zipFile;
+    private final Path root;
+    private final List<File> files;
 
     public ZipManager(String zipFile, String root, List<File> files) {
         this.zipFile = Paths.get(zipFile);

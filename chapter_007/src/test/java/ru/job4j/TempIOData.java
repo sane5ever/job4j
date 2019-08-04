@@ -1,14 +1,19 @@
 package ru.job4j;
 
-import org.apache.logging.log4j.core.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.job4j.archiver.MainZip;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.function.Consumer;
+
+import static java.lang.System.lineSeparator;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Presents temp file system data for various program tests
@@ -48,6 +53,18 @@ public class TempIOData {
 
     public static String relativize(String root, String child) {
         return Paths.get(root).relativize(Paths.get(child)).toString();
+    }
+
+    public static void assertOut(String expected, Consumer<String[]> runner, String... args) throws IOException {
+        PrintStream origOut = System.out;
+        try (ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+             PrintStream mockOut = new PrintStream(buffer)) {
+            System.setOut(mockOut);
+            runner.accept(args);
+            System.setOut(origOut);
+            String actual = buffer.toString();
+            assertEquals(expected + lineSeparator(), actual);
+        }
     }
 
     private static void makeDirs() {
