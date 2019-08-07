@@ -1,10 +1,7 @@
 package ru.job4j.tracker;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -16,16 +13,6 @@ public abstract class ITrackerTest {
 
     public ITrackerTest(ITracker tracker) {
         this.tracker = tracker;
-    }
-
-    @Before
-    public void init() {
-        tracker.init();
-    }
-
-    @After
-    public void clear() {
-        tracker.clear();
     }
 
     @Test

@@ -10,11 +10,6 @@ import java.util.List;
  * @since 2019-07-27
  */
 public interface ITracker {
-    default boolean init() {
-        // no need to init by default
-        return true;
-    }
-
     /**
      * реализует добавление заявок
      *
@@ -57,9 +52,4 @@ public interface ITracker {
      * @return заявка
      */
     Item findById(String id);
-
-    /**
-     * очищает хранилище
-     */
-    void clear();
 }

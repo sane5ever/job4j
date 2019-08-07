@@ -12,6 +12,12 @@ services:
 before_install:
   - psql -c 'create database tracker;' -U postgres
 
+install:
+  mvn install -P travis -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+script:
+  mvn test -P travis -B
+
 # после выполнения сборки запустить скрипт, который будет собирать статистику по JaCoCo
 # Здесь используется сторонни сервис https://codecov.io/
 after_success:

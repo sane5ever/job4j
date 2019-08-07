@@ -119,11 +119,6 @@ public class Tracker implements ITracker {
         return index != -1 ? this.items.get(index) : null;
     }
 
-    @Override
-    public void clear() {
-        items.clear();
-    }
-
     /**
      * возвращает позицию заявки в массиве по её уникальному ключу, при отсутствиии возвращает -1
      *

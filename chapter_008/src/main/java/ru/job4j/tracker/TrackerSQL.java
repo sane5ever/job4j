@@ -3,13 +3,9 @@ package ru.job4j.tracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Item storage based on DB connection
@@ -21,56 +17,10 @@ import static java.util.Objects.requireNonNull;
 public class TrackerSQL implements ITracker, AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(TrackerSQL.class);
 
-    private final String propsFileName;
-    private Connection connection;
+    private final Connection connection;
 
-    public TrackerSQL(String propsFileName) {
-        this.propsFileName = propsFileName;
-    }
-
-    /**
-     * Tries to make a connection to database based on properties file
-     *
-     * @return <tt>true</tt> if successful
-     */
-    @Override
-    public boolean init() {
-        try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream(propsFileName)) {
-            Properties properties = new Properties();
-            properties.load(requireNonNull(in));
-            Class.forName(properties.getProperty("driver-class-name"));
-            connection = DriverManager.getConnection(
-                    properties.getProperty("url"),
-                    properties.getProperty("username"),
-                    properties.getProperty("password")
-            );
-            checkTable();
-        } catch (Exception e) {
-            LOG.error("storage init error", e);
-            throw new IllegalStateException(e);
-        }
-        return connection != null;
-    }
-
-    /**
-     * Checks and creates (if necessary) the db structure
-     */
-    private void checkTable() {
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(
-                    "CREATE SEQUENCE IF NOT EXISTS seq;\n"
-                            + "SELECT setVal('seq', 100000);"
-                            + "\n"
-                            + "CREATE TABLE IF NOT EXISTS items\n"
-                            + "(\n"
-                            + "    id          INTEGER PRIMARY KEY DEFAULT nextval('seq'),\n"
-                            + "    name        VARCHAR                           NOT NULL,\n"
-                            + "    description VARCHAR                           NOT NULL,\n"
-                            + "    created     TIMESTAMP           DEFAULT now() NOT NULL\n"
-                            + ");");
-        } catch (SQLException e) {
-            LOG.error("create table error", e);
-        }
+    public TrackerSQL(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -81,11 +31,12 @@ public class TrackerSQL implements ITracker, AutoCloseable {
             statement.setString(1, item.getName());
             statement.setString(2, item.getDescription());
             statement.executeUpdate();
-            ResultSet set = statement.getGeneratedKeys();
-            if (set.next()) {
-                item.setId(set.getString("id"));
-                item.setCreate(set.getDate("created").getTime());
-                result = item;
+            try (ResultSet set = statement.getGeneratedKeys()) {
+                if (set.next()) {
+                    item.setId(set.getString("id"));
+                    item.setCreate(set.getDate("created").getTime());
+                    result = item;
+                }
             }
         } catch (SQLException e) {
             LOG.error("cannot insert item=" + item, e);
@@ -96,11 +47,10 @@ public class TrackerSQL implements ITracker, AutoCloseable {
     @Override
     public boolean replace(String id, Item item) {
         try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE items SET name=?, description=?, created=? WHERE id=?")) {
+                "UPDATE items SET name=?, description=? WHERE id=?")) {
             statement.setString(1, item.getName());
             statement.setString(2, item.getDescription());
-            statement.setTimestamp(3, new Timestamp(item.getCreate()));
-            statement.setInt(4, Integer.valueOf(item.getId()));
+            statement.setInt(3, Integer.valueOf(id));
             int rowCount = statement.executeUpdate();
             return rowCount != 0;
         } catch (SQLException e) {
@@ -143,18 +93,9 @@ public class TrackerSQL implements ITracker, AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws SQLException {
         if (connection != null) {
             connection.close();
-        }
-    }
-
-    @Override
-    public void clear() {
-        try (PreparedStatement statement = connection.prepareStatement("TRUNCATE items")) {
-            statement.execute();
-        } catch (SQLException e) {
-            LOG.error("cannot clear", e);
         }
     }
 
@@ -172,10 +113,11 @@ public class TrackerSQL implements ITracker, AutoCloseable {
             for (PreparedStatementSetter setter : setters) {
                 setter.set(statement);
             }
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Item item = parseItem(resultSet);
-                result.add(item);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Item item = parseItem(resultSet);
+                    result.add(item);
+                }
             }
         } catch (SQLException e) {
             LOG.error("cannot find items", e);
