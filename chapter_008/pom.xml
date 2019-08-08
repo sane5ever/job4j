@@ -11,6 +11,10 @@
 
     <artifactId>chapter_008</artifactId>
 
+    <properties>
+        <jaxb.api.version>2.3.0</jaxb.api.version>
+    </properties>
+
     <profiles>
         <profile>
             <id>main</id>
@@ -67,15 +71,28 @@
                     <include>tracker.properties</include>
                 </includes>
             </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>magnit.properties</include>
+                    <include>xml/*</include>
+                </includes>
+            </testResource>
+
         </testResources>
     </build>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <!-- JDBCs -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.27.2.1</version>
         </dependency>
 
         <dependency>
@@ -90,6 +107,34 @@
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>one.util</groupId>
+            <artifactId>streamex</artifactId>
+            <version>0.6.8</version>
+        </dependency>
+
+        <!--JAXB-->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>${jaxb.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 
