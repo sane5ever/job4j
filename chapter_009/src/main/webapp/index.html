@@ -10,7 +10,7 @@
 <div class="container-fluid">
     <h1>Users page</h1>
     <hr>
-    <form class="border border-light w-50" action="index.html" novalidate>
+    <form class="border border-light w-50" novalidate>
         <p class="h5">Add user</p>
         <!-- Email -->
         <div class="form-group">
@@ -30,8 +30,8 @@
             <label for="gender"></label>
             <select class="browser-default custom-select" id="gender" required>
                 <option value="">Choose gender</option>
-                <option value="1">Male</option>
-                <option value="2">Female</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
             </select>
             <div class="invalid-feedback">Please choose</div>
         </div>
@@ -42,12 +42,12 @@
                 <textarea class="form-control rounded-0" id="desc" rows="3" placeholder="Description"></textarea>
             </div>
         </div>
-        <button class="btn btn-info btn-block my-1" type="submit">Submit</button>
+        <button class="btn btn-info btn-block my-1" type="button">Add row</button>
     </form>
     <br><br>
 
     <p class="h4">User list</p>
-    <table class="table table-hover">
+    <table class="table table-hover" id="table">
         <thead class="thead-light">
         <tr>
             <th>Email</th>
@@ -82,16 +82,34 @@
             var forms = document.getElementsByClassName('border border-light w-50');
             // Loop over them and prevent submission
             var validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
+                var button = form.getElementsByClassName('btn btn-info btn-block my-1').item(0);
+                button.addEventListener('click', function (event) {
                     if (form.checkValidity() === false) {
                         event.preventDefault();
                         event.stopPropagation();
+                        form.classList.add('was-validated');
+                    } else {
+                        addRow();
+                        form.reset();
+                        form.classList.remove('was-validated');
                     }
-                    form.classList.add('was-validated');
                 }, false);
             });
         }, false);
     })();
+
+    function addRow() {
+        var email = $('#email').val();
+        var password = $('#password').val();
+        var gender = $('#gender').val();
+        var description = $('#desc').val();
+        $('#table tr:last').after('<tr>' +
+            '<td>' + email + '</td>' +
+            '<td>' + password + '</td>' +
+            '<td>' + gender + '</td>' +
+            '<td>' + description + '</td>' +
+            '</tr>');
+    }
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
