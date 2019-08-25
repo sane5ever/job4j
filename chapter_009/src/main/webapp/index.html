@@ -30,8 +30,8 @@
             <label for="gender"></label>
             <select class="browser-default custom-select" id="gender" required>
                 <option value="">Choose gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
             </select>
             <div class="invalid-feedback">Please choose</div>
         </div>
@@ -50,6 +50,7 @@
     <table class="table table-hover" id="table">
         <thead class="thead-light">
         <tr>
+            <th>Id</th>
             <th>Email</th>
             <th>Password</th>
             <th>Gender</th>
@@ -57,18 +58,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>john@example.com</td>
-            <td>password</td>
-            <td>Male</td>
-            <td>Example</td>
-        </tr>
-        <tr>
-            <td>mary@example.com</td>
-            <td>password</td>
-            <td>Female</td>
-            <td>Description</td>
-        </tr>
+        <tr></tr>
         </tbody>
     </table>
 </div>
@@ -89,7 +79,7 @@
                         event.stopPropagation();
                         form.classList.add('was-validated');
                     } else {
-                        addRow();
+                        send();
                         form.reset();
                         form.classList.remove('was-validated');
                     }
@@ -98,16 +88,50 @@
         }, false);
     })();
 
-    function addRow() {
-        var email = $('#email').val();
-        var password = $('#password').val();
-        var gender = $('#gender').val();
-        var description = $('#desc').val();
+    (function () {
+        window.addEventListener('load', function () {
+            updateTable();
+        }, false)
+    })();
+
+
+    function send() {
+        var person = {
+            email: $('#email').val(),
+            password: $('#password').val(),
+            gender: $('#gender').val(),
+            description: $('#desc').val()
+        };
+        $.ajax({
+            type: "POST",
+            url: "user",
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(person)
+        }).done(function (row) {
+            addRow(row);
+        })
+    }
+
+    function updateTable() {
+        $.ajax({
+            type: "GET",
+            url: "user",
+            dataType: 'json'
+        }).done(function (data) {
+            $.each(data, function (i, user) {
+                addRow(user);
+            });
+        })
+    }
+
+    function addRow(user) {
         $('#table tr:last').after('<tr>' +
-            '<td>' + email + '</td>' +
-            '<td>' + password + '</td>' +
-            '<td>' + gender + '</td>' +
-            '<td>' + description + '</td>' +
+            '<td>' + user.id + '</td>' +
+            '<td>' + user.email + '</td>' +
+            '<td>' + user.password + '</td>' +
+            '<td>' + user.gender + '</td>' +
+            '<td>' + user.description + '</td>' +
             '</tr>');
     }
 </script>
@@ -115,5 +139,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 </html>
