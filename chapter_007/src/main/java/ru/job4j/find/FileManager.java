@@ -1,10 +1,11 @@
 package ru.job4j.find;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides searching logic of file finder
@@ -28,18 +29,43 @@ public class FileManager {
      * Main method to process file searching
      */
     public void search() {
-        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(output))) {
-            Files.walkFileTree(root, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (matcher.matches(file.getFileName())) {
-                        writer.println(file.toString());
-                    }
-                    return super.visitFile(file, attrs);
-                }
-            });
+        try {
+            var fileNames = searchFiles();
+            writeResult(fileNames);
         } catch (IOException e) {
             throw new IllegalStateException("cannot read/write file", e);
+        }
+    }
+
+    /**
+     * Creates a list of matched file paths
+     *
+     * @return matched file paths
+     * @throws IOException if an io error occurs
+     */
+    private List<String> searchFiles() throws IOException {
+        List<String> result = new ArrayList<>();
+        Files.walkFileTree(root, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (matcher.matches(file.getFileName())) {
+                    result.add(file.toString());
+                }
+                return super.visitFile(file, attrs);
+            }
+        });
+        return result;
+    }
+
+    /**
+     * Writes the given file path lines to the file
+     *
+     * @param lines file names to be written
+     * @throws IOException if an io error occurs
+     */
+    private void writeResult(List<String> lines) throws IOException {
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(output))) {
+            lines.forEach(writer::println);
         }
     }
 }
