@@ -11,6 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.job4j.xml.XMLStore.ENRTY_OBJECTS_FACTORY;
+
 /**
  * Proceeds the logic of numbers storing to and getting from DB
  *
@@ -59,7 +61,8 @@ public class SQLStore {
     private List<EntryType> getEntries(ResultSet resultSet) throws SQLException {
         List<EntryType> result = new ArrayList<>(resultSet.getFetchSize());
         while (resultSet.next()) {
-            EntryType entry = new EntryType(resultSet.getInt("field"));
+            EntryType entry = ENRTY_OBJECTS_FACTORY.createEntryType();
+            entry.setField(resultSet.getInt("field"));
             result.add(entry);
         }
         return result;

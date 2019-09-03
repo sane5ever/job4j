@@ -29,7 +29,9 @@ public abstract class ITrackerTest {
         Item fresh = new Item("fresh", "fresh description", 321L);
         fresh.setId(id);
         tracker.replace(id, fresh);
-        assertThat(tracker.findById(id).getName(), is("fresh"));
+        Item replaced = tracker.findById(id);
+        assertNotEquals(previous, replaced);
+        assertThat(replaced.getName(), is("fresh"));
     }
 
     @Test
@@ -44,7 +46,9 @@ public abstract class ITrackerTest {
         Item first = new Item("first", "desc", 100L);
         tracker.add(first);
         tracker.delete(first.getId());
-        assertNull(tracker.findById(first.getId()));
+        Item found = tracker.findById(first.getId());
+        assertNotEquals(first, found);
+        assertNull(found);
     }
 
     @Test
@@ -90,7 +94,6 @@ public abstract class ITrackerTest {
                 Arrays.asList(second, third)
                 )
         );
-
     }
 
     @Test

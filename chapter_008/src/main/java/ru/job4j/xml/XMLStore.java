@@ -30,7 +30,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @since 2019-07-26
  */
 public class XMLStore {
-
+    public static final ObjectFactory ENRTY_OBJECTS_FACTORY = new ObjectFactory();
     private final JAXBContext jaxbContext;
 
     private Marshaller marshaller;
@@ -71,7 +71,7 @@ public class XMLStore {
     }
 
     String generateXml(List<EntryType> entries) {
-        Entries entriesShell = new Entries();
+        Entries entriesShell = ENRTY_OBJECTS_FACTORY.createEntries();
         entriesShell.setEntry(entries);
         StringWriter buffer = new StringWriter();
         try {
