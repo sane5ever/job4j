@@ -25,8 +25,8 @@ public class MultiFileSystemScanner extends FileSystemScanner {
     private ExecutorService executor;
 
     @Override
-    void addIfValid(List<File> result, File file, List<String> exts) {
-        executor.execute(() -> super.addIfValid(result, file, exts));
+    void addIfValid(List<File> result, File file, List<String> exts, boolean included) {
+        executor.execute(() -> super.addIfValid(result, file, exts, included));
     }
 
     /**
