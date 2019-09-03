@@ -15,7 +15,7 @@ public interface UserAction {
      * @param input получение данных от пользователя
      * @param tracker хранилище заявок
      */
-    void execute(Input input, Tracker tracker);
+    void execute(Input input, ITracker tracker);
 
     /**
      * Возвращаем информацию о данном пользовательском действии.

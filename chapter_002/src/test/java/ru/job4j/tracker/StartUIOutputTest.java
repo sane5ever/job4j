@@ -20,7 +20,7 @@ public class StartUIOutputTest {
     /** поток вывода для перехвата консоли в буфер */
     private PrintStream out;
 
-    private final Tracker tracker = new Tracker();
+    private final ITracker tracker = new Tracker();
     private Input input;
 
     private static final String HEADER = new StringJoiner(System.lineSeparator())

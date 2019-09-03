@@ -16,7 +16,7 @@ public class StartUI {
     /**
      * хранилище заявок
      */
-    private final Tracker tracker;
+    private final ITracker tracker;
 
     private boolean ready = true;
 
@@ -26,7 +26,7 @@ public class StartUI {
      * @param input   ввод данных от пользователя
      * @param tracker хранилище заявок
      */
-    public StartUI(Input input, Tracker tracker) {
+    public StartUI(Input input, ITracker tracker) {
         this.input = input;
         this.tracker = tracker;
     }

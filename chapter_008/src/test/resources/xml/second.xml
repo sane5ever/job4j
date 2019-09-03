@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entries xmlns="http://job4j.ru"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://job4j.ru output.xsd" >
+    <entry field="1"/>
+    <entry field="2"/>
+    <entry field="3"/>
+    <entry field="4"/>
+    <entry field="5"/>
+</entries>

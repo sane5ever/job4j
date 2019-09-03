@@ -1,9 +1,10 @@
 package ru.job4j.tracker;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Используется как хранилище заявок.
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2018-10-02
  */
-public class Tracker {
+public class Tracker implements ITracker {
 
     /**
      * массив для хранения заявок
@@ -30,6 +31,7 @@ public class Tracker {
      * @param item новая заявка
      * @return успешно добавленная заявка
      */
+    @Override
     public Item add(Item item) {
         item.setId(this.generateId());
         item.setCreate(System.currentTimeMillis());
@@ -52,6 +54,7 @@ public class Tracker {
      * @param id   уникальный ключ заменяемой заявки
      * @param item заменяющая заявка
      */
+    @Override
     public boolean replace(String id, Item item) {
         boolean result = false;
         int index = this.findPositionById(id);
@@ -69,6 +72,7 @@ public class Tracker {
      *
      * @param id уникальный ключ удаляемой заявки
      */
+    @Override
     public boolean delete(String id) {
         boolean result = false;
         int index = this.findPositionById(id);
@@ -84,6 +88,7 @@ public class Tracker {
      *
      * @return массив с заявками
      */
+    @Override
     public List<Item> findAll() {
         return this.items;
     }
@@ -94,6 +99,7 @@ public class Tracker {
      * @param key имя искомых заявок
      * @return массив заявок
      */
+    @Override
     public List<Item> findByName(String key) {
         return this.items.stream().filter(
                 item -> item.getName().equals(key)
@@ -107,6 +113,7 @@ public class Tracker {
      * @param id уникальный ключ
      * @return заявка
      */
+    @Override
     public Item findById(String id) {
         int index = this.findPositionById(id);
         return index != -1 ? this.items.get(index) : null;
