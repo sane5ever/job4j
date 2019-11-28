@@ -1,13 +1,14 @@
 package ru.job4j;
 
-import org.slf4j.Logger;
-
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
+
+import static com.google.common.io.Resources.getResource;
 
 /**
  * Util class to handle new connections
@@ -42,17 +43,24 @@ public class SQLUtil {
     }
 
     public static ConnectionFactory getConnectionFactory(String resource, ConnectionProxy proxy) {
-        try (InputStream in = SQLUtil.class.getClassLoader().getResourceAsStream(resource)) {
+        try (InputStream in = getResource(resource).openStream()) {
             Properties properties = new Properties();
             properties.load(in);
-            Class.forName(properties.getProperty("db.driver-class-name"));
-            var url = properties.getProperty("db.url");
-            var username = properties.getProperty("db.username");
-            var password = properties.getProperty("db.password");
-            return () -> getConnection(url, username, password, proxy);
+            if (proxy != null) {
+                properties.put("proxy", proxy);
+            }
+            return getConnectionFactory(properties);
         } catch (Exception e) {
             throw new IllegalArgumentException("cannot load connection properties from " + resource, e);
         }
+    }
+
+    public static ConnectionFactory getConnectionFactory(Map propertyMap) throws ClassNotFoundException {
+        Class.forName((String) propertyMap.get("db.driver"));
+        var url = (String) propertyMap.get("db.url");
+        var username = (String) propertyMap.get("db.username");
+        var password = (String) propertyMap.get("db.password");
+        return () -> getConnection(url, username, password, (ConnectionProxy) propertyMap.get("proxy"));
     }
 
     private static Connection getConnection(String url, String username, String password, ConnectionProxy proxy) throws SQLException {
