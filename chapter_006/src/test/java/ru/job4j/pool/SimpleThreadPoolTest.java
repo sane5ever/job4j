@@ -5,8 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -25,16 +24,16 @@ public class SimpleThreadPoolTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    Set<Integer> result = new CopyOnWriteArraySet<>();
-    Set<Integer> expected = Set.of(
+    private final Set<Integer> result = new CopyOnWriteArraySet<>();
+    private final Set<Integer> expected = Set.of(
             0, 1, 4, 9, 16,
             25, 36, 49, 64, 81,
             100, 121, 144, 169, 196,
             225, 256, 289, 324, 361
     );
-    AtomicInteger count = new AtomicInteger(0);
+    private final AtomicInteger count = new AtomicInteger(0);
 
-    Runnable task = () -> {
+    private Runnable task = () -> {
         int num = count.getAndIncrement();
         result.add(num * num);
     };
@@ -53,20 +52,22 @@ public class SimpleThreadPoolTest {
 
     @Test
     public void whenShutdownThreadPool() throws InterruptedException {
+        var latch = new CountDownLatch(100);
+
         Thread addThread = new Thread(
                 () ->
                         IntStream.range(0, 10000).forEach(i -> {
                             try {
                                 pool.work(task);
+                                latch.countDown();
                             } catch (InterruptedException | RejectedExecutionException e) {
                                 Thread.currentThread().interrupt();
                             }
                         }));
         Thread shutdownThread = new Thread(() -> pool.shutdown());
         addThread.start();
-        while (result.size() == 0) {
-            Thread.sleep(1);
-        }
+        latch.await(); // wait until part of tasks would be added
+
         shutdownThread.start();
         addThread.join();
         assertNotEquals(result.size(), 10000);

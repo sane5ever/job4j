@@ -8,7 +8,9 @@ import ru.job4j.TempIOData;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static ru.job4j.TempIOData.*;
@@ -35,10 +37,9 @@ public abstract class AbstractFileSystemScannerTest {
     @Test
     public void whenJavaAndXml() {
         List<File> files = scanner.files(TMP_TEST_ROOT, List.of("java", "xml"));
-        Collections.sort(files); // to prevent test assertion error on multithreading scanner work
         assertEquals(
-                List.of(file1, file2),
-                files
+                Set.of(file1, file2),
+                new HashSet<>(files) // to prevent test assertion error on multithreading scanner work
         );
     }
 
