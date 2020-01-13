@@ -129,6 +129,9 @@ public class HhRuJsoupProcessorTest extends AbstractJsoupProcessorTest {
 
     @Test
     public void parseDateTime() {
+
+
+
         tester.parseDate(dateOf(8, 3),
                 "3 августа");
     }
@@ -136,15 +139,6 @@ public class HhRuJsoupProcessorTest extends AbstractJsoupProcessorTest {
     @Test
     public void parseDateTimeEmpty() {
         tester.parseDate(now(), "");
-    }
-
-    @Test
-    public void parseDateTimeEndOfYear() {
-        LocalDate endOfYear = dateOf(12, 31);
-        if (!LocalDate.now().isEqual(endOfYear)) { // test won't be succeeded on 31 DEC — should skip it
-            tester.parseDate(endOfYear.minusYears(1), // should be parsed as last year date
-                    "31 декабря");
-        }
     }
 
     @Test
@@ -176,6 +170,8 @@ public class HhRuJsoupProcessorTest extends AbstractJsoupProcessorTest {
     }
 
     private LocalDate dateOf(int month, int dayOfMonth) {
-        return LocalDate.of(now().getYear(), month, dayOfMonth);
+        var now = now();
+        var result = LocalDate.of(now.getYear(), month, dayOfMonth);
+        return result.isAfter(now) ? result.minusYears(1) : result;
     }
 }
