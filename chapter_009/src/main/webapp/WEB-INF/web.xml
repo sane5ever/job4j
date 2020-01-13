@@ -9,6 +9,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>EchoServlet</servlet-name>
-        <url-pattern>/echo</url-pattern>
+        <url-pattern>/user</url-pattern>
     </servlet-mapping>
 </web-app>

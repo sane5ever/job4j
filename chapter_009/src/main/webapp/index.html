@@ -1,0 +1,144 @@
+<!DOCKTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+    <h1>Users page</h1>
+    <hr>
+    <form class="border border-light w-50" novalidate>
+        <p class="h5">Add user</p>
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email"></label>
+            <input type="email" id="email" class="form-control" placeholder="E-mail" required>
+            <div class="invalid-feedback">Please fill out this field correctly</div>
+        </div>
+        <!-- Password -->
+
+        <div class="form-group">
+            <label for="password"></label>
+            <input type="password" class="form-control" id="password" placeholder="Password" required>
+            <div class="invalid-feedback">Please fill out this field</div>
+        </div>
+
+        <div class="form-group">
+            <label for="gender"></label>
+            <select class="browser-default custom-select" id="gender" required>
+                <option value="">Choose gender</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+            </select>
+            <div class="invalid-feedback">Please choose</div>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="desc"></label>
+            <div class="form-group">
+                <textarea class="form-control rounded-0" id="desc" rows="3" placeholder="Description"></textarea>
+            </div>
+        </div>
+        <button class="btn btn-info btn-block my-1" type="button">Add row</button>
+    </form>
+    <br><br>
+
+    <p class="h4">User list</p>
+    <table class="table table-hover" id="table">
+        <thead class="thead-light">
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Gender</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('border border-light w-50');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                var button = form.getElementsByClassName('btn btn-info btn-block my-1').item(0);
+                button.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        form.classList.add('was-validated');
+                    } else {
+                        send();
+                        form.reset();
+                        form.classList.remove('was-validated');
+                    }
+                }, false);
+            });
+        }, false);
+    })();
+
+    (function () {
+        window.addEventListener('load', function () {
+            updateTable();
+        }, false)
+    })();
+
+
+    function send() {
+        var person = {
+            email: $('#email').val(),
+            password: $('#password').val(),
+            gender: $('#gender').val(),
+            description: $('#desc').val()
+        };
+        $.ajax({
+            type: "POST",
+            url: "user",
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(person)
+        }).done(function (row) {
+            addRow(row);
+        })
+    }
+
+    function updateTable() {
+        $.ajax({
+            type: "GET",
+            url: "user",
+            dataType: 'json'
+        }).done(function (data) {
+            $.each(data, function (i, user) {
+                addRow(user);
+            });
+        })
+    }
+
+    function addRow(user) {
+        $('#table tr:last').after('<tr>' +
+            '<td>' + user.id + '</td>' +
+            '<td>' + user.email + '</td>' +
+            '<td>' + user.password + '</td>' +
+            '<td>' + user.gender + '</td>' +
+            '<td>' + user.description + '</td>' +
+            '</tr>');
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+</html>
