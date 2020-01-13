@@ -1,5 +1,7 @@
 package ru.job4j.servlets;
 
+import java.util.Objects;
+
 /**
  * User
  *
@@ -51,5 +53,22 @@ public class User {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                gender == user.gender &&
+                Objects.equals(description, user.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, gender, description);
     }
 }
