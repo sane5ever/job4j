@@ -1,13 +1,25 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f614f83d531c4c6eae387fa9392b8240)](https://www.codacy.com/app/sane5ever/job4j?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sane5ever/job4j&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.org/sane5ever/job4j.svg?branch=master)](https://travis-ci.org/sane5ever/job4j)
-[![codecov](https://codecov.io/gh/sane5ever/job4j/branch/master/graph/badge.svg)](https://codecov.io/gh/sane5ever/job4j)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f614f83d531c4c6eae387fa9392b8240)](https://www.codacy.com/app/inflatone/job4j?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=inflatone/job4j&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/inflatone/job4j.svg?branch=master)](https://travis-ci.org/inflatone/job4j)
+[![codecov](https://codecov.io/gh/inflatone/job4j/branch/master/graph/badge.svg)](https://codecov.io/gh/inflatone/job4j)
 
 # Проекты курса "С нуля до трудоустройства".
 #### Обучение проходит на сайте http://job4j.ru/ для овладения навыками, необходимыми для начала карьеры java-разработчика.
-* Ожидаемые сроки окончания уровня **Стажёр**: *ноябрь 2018 г.*
-* Ожидаемые сроки окончания уровня **Junior**: *апрель 2019 г.*
-* Ожидаемые сроки окончания уровня **Middle**: *август 2019 г.*
-* Ожидаемые сроки окончания уровня **FullStack**: *ноябрь 2019 г.*
+
+#### Ссылки на избранные задания:
+* Web-проекты _Middle_-заданий вынесены в отдельный <a href="https://github.com/inflatone/job4j.ee">репозиторий</a>.
+* <a href="https://github.com/inflatone/job4j/tree/master/chapter_007">Задания</a> блока _JDBC_:
+    * Консольный граббер вакансий по расписанию
+    * XML XSLT JDBC Оптимизация
+* <a href="https://github.com/inflatone/job4j/tree/master/chapter_006">Задания</a> блока _Multithreading_
+    * Игра Бомбермен
+    * Неблокирующий кеш
+* <a href="https://github.com/inflatone/job4j/tree/master/chapter_008">Задания</a> блока _IO_:
+    * Socket's Time Bot
+    * Поиск файлов по критерию
+    * Утилита для архивации папки
+* <a href="https://github.com/inflatone/job4j/tree/master/chapter_005">Задания</a> блока _Структуры данных и алгоритмы_:
+    * Сбор статистики изменений коллекций
+    * Проверка символов слов на соответствие
 
 #### Освоенные технологии в рамках данного курса:
 * компоненты Java, структура элементарной программы, компиляция и запуск приложения в консоли, настройка среды разработки
@@ -32,6 +44,17 @@
   * гибкие средства синхронизации работы нитей (locks + synchronizers)
   * оптимизация неатомарных операций с помощью compare-and-swap (atomics)
 * потоки ввода-вывода и сокеты
+* работа с SQL в Java
+  * настройка PostgreSQL
+  * ключи (primary, foreign), запросы, фильтры, join'ы
+  * нормализация БД
+  * JDBC, Connection, Transactions, rollback
+  * in-memory БД (SQLite, HSQLDB)
+* структура клиент-серверных приложений
+  * схема прав пользователя и роли
+  * Servlet API: контейнер сервлетов, JSP, JSTL
+  * реализация web-приложения с разбиением на слои и применением паттерна MVC
+  * основы JS, AJAX, JSON, jQuery, Bootstrap
 
 ##### Шаблоны проектирования:
   * порождающие (Builder, Factory method и Abstract factory, Singleton, Lazy initialization и Holder)
