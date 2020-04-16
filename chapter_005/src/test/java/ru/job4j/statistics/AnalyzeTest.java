@@ -2,6 +2,8 @@ package ru.job4j.statistics;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.job4j.statistics.model.Info;
+import ru.job4j.statistics.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,64 +20,62 @@ import static org.junit.Assert.assertThat;
  */
 public class AnalyzeTest {
     private final Analyze analyze = new Analyze();
-    private List<Analyze.User> previous,
+    private List<User> previous,
             current;
 
     @Before
     public void prepare() {
         this.previous = List.of(
-                new Analyze.User(111, "Daredevil"),
-                new Analyze.User(222, "Karen Page"),
-                new Analyze.User(555, "Kingpin")
+                new User(111, "Daredevil"),
+                new User(222, "Karen Page"),
+                new User(555, "Kingpin")
         );
         this.current = new ArrayList<>(previous);
     }
 
     @Test
     public void whenNoChangesThenAllInfoFieldsShouldBeZero() {
-        Analyze.Info result = this.analyze.diff(previous, current);
-        assertThat(result.added, is(0));
-        assertThat(result.changed, is(0));
-        assertThat(result.deleted, is(0));
+        Info result = this.analyze.diff(previous, current);
+        assertThat(result.getAdded(), is(0));
+        assertThat(result.getChanged(), is(0));
+        assertThat(result.getDeleted(), is(0));
     }
 
     @Test
     public void whenTwoAddedThenInfoShouldMarkThat() {
         this.current.addAll(List.of(
-                new Analyze.User(333, "Elektra"),
-                new Analyze.User(444, "Punisher")
+                new User(333, "Elektra"),
+                new User(444, "Punisher")
         ));
-        Analyze.Info result = this.analyze.diff(previous, current);
-        assertThat(result.added, is(2));
-        assertThat(result.changed, is(0));
-        assertThat(result.deleted, is(0));
+        Info result = this.analyze.diff(previous, current);
+        assertThat(result.getAdded(), is(2));
+        assertThat(result.getChanged(), is(0));
+        assertThat(result.getDeleted(), is(0));
     }
 
     @Test
     public void whenTwoRemovedThenInfoShouldMarkThat() {
         this.current.remove(0);
         this.current.remove(0);
-        Analyze.Info result = this.analyze.diff(previous, current);
-        assertThat(result.added, is(0));
-        assertThat(result.changed, is(0));
-        assertThat(result.deleted, is(2));
+        Info result = this.analyze.diff(previous, current);
+        assertThat(result.getAdded(), is(0));
+        assertThat(result.getChanged(), is(0));
+        assertThat(result.getDeleted(), is(2));
     }
 
     @Test
     public void whenOneEditedThenInfoShouldSymmetricallyMarkThat() {
         this.current.remove(0);
-        this.current.add(new Analyze.User(111, "Matt Murdock"));
-        assertThat(this.analyze.diff(previous, current).changed, is(1));
-        assertThat(this.analyze.diff(current, previous).changed, is(1));
+        this.current.add(new User(111, "Matt Murdock"));
+        assertThat(this.analyze.diff(previous, current).getChanged(), is(1));
+        assertThat(this.analyze.diff(current, previous).getChanged(), is(1));
     }
 
     @Test
     public void whenReflectiveCheckThenAllInfoFieldsShouldBeZero() {
-        Analyze.Info result = this.analyze.diff(previous, previous);
-        assertThat(result.added, is(0));
-        assertThat(result.deleted, is(0));
-        assertThat(result.changed, is(0));
+        Info result = this.analyze.diff(previous, previous);
+        assertThat(result.getAdded(), is(0));
+        assertThat(result.getDeleted(), is(0));
+        assertThat(result.getChanged(), is(0));
     }
-
-    
 }
